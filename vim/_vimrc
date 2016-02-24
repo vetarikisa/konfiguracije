@@ -1,0 +1,519 @@
+"Sledece sto bih mogao da unesem trebalo bi da bude mozda foldovanje
+
+""call ucompleteme#Setup()
+
+"Ovo bi trebao da bude deo koda koji se odnosi na Vundle
+"umesto ovog koda za linux
+"set rtp+=~/.vim/bundle/Vundle.vim
+"call vundle#begin()
+"treba da stoji
+"set rtp+=~/vimfiles/bundle/Vundle.vim/
+"let path='~/vimfiles/bundle'
+"call vundle#begin(path)
+
+"////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/vimfiles/bundle/Vundle.vim/
+let path='~/vimfiles/bundle'
+call vundle#begin(path)
+
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" plugin on GitHub repo
+Plugin 'tpope/vim-fugitive'
+
+"EasyMotion
+Plugin 'EasyMotion'
+
+"Color scheme
+Plugin 'candy.vim'
+
+"Color scheme
+Plugin 'candycode.vim'
+
+"Color scheme
+Plugin 'darkerdesert'
+
+"Color scheme
+Plugin 'Solarized'
+
+"File system tree
+Plugin 'The-NERD-tree'
+
+"Tag bar - source code browse
+Plugin 'Tagbar'
+
+"Commenatari
+Plugin 'The-NERD-Commenter'
+
+"snippet
+Plugin 'snipMate'
+
+"trebalo bi da mi nudi argumente klase i sl ali ne radi
+"Plugin 'javacomplete'
+
+"dovrsava granicnike
+"Plugin 'delimitMate'
+
+"dovrsava granicnike
+Plugin 'AutoClose'
+
+"youcompleteme
+"Plugin 'ucompleteme'
+
+"proba cscope-a - nesto ovo ne sljaka tj izgleda da mora rucno da se instalira pa da se napravi fajl pa tek onda da mu se pristupa. a i ovo je nominalno pravljeno za Linux
+"Plugin 'cscope-menu'
+
+"ovo je plugin koji ce da koristi cscope...valjda
+"Plugin 'CCTree'
+
+"pokusaj da prikaze msve markera"
+Plugin 'kshenoy/vim-signature'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin from http://vim-scripts.org/vim/scripts.html
+"Plugin 'L9'
+" Git plugin not hosted on GitHub
+"Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+"Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Avoid a name conflict with L9
+"Plugin 'user/L9', {'name': 'newL9'}
+
+" All of your Plugins must be added before the following line
+" required
+call vundle#end()
+
+ " required
+filetype plugin indent on
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+
+"steps to install a plugin - izgleda da moze direktno u vimrc da se instalira plug in!!! u svsakom slucaju za sada cu se drzati koraka koje sam do sada koristio!u .vimrc pozovem PluginInstall i odradim sve
+
+"   add it to you .vimrc between call vundle#begin() and call vundle#end()
+"    save the .vimrc
+"   type <ESC>:PluginInstall<CR>
+"to update the plugins
+"    type <ESC>:PluginInstall!<CR> or <ESC>:PluginUpdate<CR>
+"to remove a plugin
+"    remove it from the .vimrc
+"    save the .vimrc
+"    type <ESC>:PluginClean<CR>
+"////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+"set nocompatible
+"source $VIMRUNTIME/vimrc_example.vim
+"source $VIMRUNTIME/mswin.vim
+"behave mswin
+filetype plugin on
+
+" pozivanje izmenjenog vimrc fajla - mozda ce morati da bude drugacije  u
+" Linux-u tj tamo cu da koristim $MYVIMRC... nisam siguran zasto ovde ne
+" koristim ali bice da mi nije definisana ova gobalna promenljiva $MYVIMRC
+"dodao sam na kraju i da se ukine na kraju highlighting!!!!!!!!iako ponekad signalizira da nesto nije ok!!!!!desava se i da naizlged bez razloga stoji...tako da sam ga iskljucio!!!!!!!!
+map <Del> :source c:\Users\vlastimir\vim\_vimrc<ENTER>:nohlsearch<ENTER>
+map <F1> :copen 5<CR>
+map <F1><F1> :cclose<CR>
+
+" pozivanje nerdtree-ja
+map <F2> :NERDTreeToggle<CR>
+
+" kretanje kroz otvorene fajlove (bafere)
+nmap <F3> :bp<CR>
+nmap <F4> :bn<CR>
+
+" pozivanje poslednje ex command-e - nakon sto se jednom pozove moze dalje da
+" se poziva sa @@ takoda se ovaj f moze kasnije osloboditi ako bude potrebno
+"nmap <F6> @:<CR>
+
+" pozivanje tagova fajla (pojednostavljena verzija ctags) 
+nmap <BS> :TagbarToggle<CR>
+
+"kada imam vise od jednog prozora mogu ovaj prozor da gurnem na novi TAB
+"kroz tabova se krecem gt i gT
+" u gVim-u su ctrl pgUp i pgDwn za kretanje kroz tab-ove
+map <F8> <C-w>T
+map <F8><F8> :tabclose<CR>
+
+"savrseno!!!!!!!!!!!!!oporavalja index ka svim funkcioma!!!!!!!!!!!!!
+"ovaj reset mi bas i nije radio
+map <F11> :!cscope -b<CR>:cs reset<CR><CR>
+":tp predhodni, :ts nudi sve, :tn ide na sledecu definiciju funkcije"
+map <F5> :ts<CR>
+"da se gasi nohlsearch 
+map <F9> :nohlsearch<CR>
+
+" da ne moram da razlikujem prave redove od redova na ekranu
+nnoremap j gj
+nnoremap k gk
+
+"unos i brisanje praznih redova
+" Ctrl-j/k deletes blank line below/above, and Alt-j/k inserts.
+" brise gornji ili donji red ako su prazni
+nnoremap <silent><C-j> m`:silent +g/\m^\s*$/d<CR>``:noh<CR>
+nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
+" unosi novi red ispod ili iznad
+nnoremap <silent><A-j> :set paste<CR>m`o<Esc>``:set nopaste<CR>
+nnoremap <silent><A-k> :set paste<CR>m`O<Esc>``:set nopaste<CR>
+
+"bad habit breaking - ostavicu za sada da se koristi mis...
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
+"da ne bih brisao sa backsapce i delete
+inoremap <BS> <Nop>
+inoremap <Del> <Nop>
+
+
+"fon i velicina font-a.PAZI!!!!!!!!!!!nisam siguran da li ovaj font postoji na Linux-u tj da li ce ova komanda praviti problem kada se vim pokrene na Linux-u
+set guifont=Consolas:h16
+" prica oko tabova... jos mi nije jasna...
+set tabstop=4
+set softtabstop=4
+set expandtab
+" broj redova
+set number
+" indending
+set cindent
+"upaliti syntax highlighting
+syntax on
+" highlighting dok kucam pattern
+set hlsearch
+" linija u kojoj je kursor je selektovana
+set cursorline
+" automatski se trazi rec i selektuje dok kucam pattern
+set incsearch
+"upali mogucnost folding-a
+set foldmethod=syntax
+" statusna linija  (sa puno podataka)
+set laststatus=2
+set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%m%r%y%=%c,%l/%L\ %P
+
+" mislim da mi ova donja linija vise ne treba - uveo sam ff da mi resi ovaj
+" problem
+"imap (); ();jjhi
+"imap {} {}jji<ENTER>
+" kada hocu da iskocim iz insert mode-a i da iskocim iz trenutnih zagrada i da
+" MAPIRANJE TASTERA:
+"kapiram da je ovo komentar i u windows-ovom vim konfiguracionom fajlu
+"RADIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII!!!!!!!!!!!!!!!!!!
+imap jj <c-[>
+" nastavim na kraju samo pritisnem ff
+imap ff jjA
+" da izbirsem poslednji rec ne izlazeci iz insert moda
+imap dd <C-w>
+" da izbirsem poslednji red ne izlazeci iz insert moda - stavicu vv posto mi je s blizu d pa cu cesto brisati ceo red umesto reci i obratno
+imap vv <C-u>
+"do jaja!!!!!!!!!!!!!!!!!!!!!!!!!nameseteno je da ALT-d brise po jedan karakter u insert modu"
+""imap <A-d> <C-o>x
+""imap aa <C-h>
+"<C-h> " delete back one character (backspace)!!!!!!!!!!!!!!!!!!!!!!!!!!!
+""<C-w> " delete back one word
+""<C-u> " delete back to start of line
+""<C-k> " delete forward to end of line"imap <A-d> jjxa
+"kada selektujem visual block sa CTRL-v onda mogu da unesem tekst u vise redova!!!!!!!!!!!!!!"
+"kada otkucam {} pozicionira me u novom redu sa uvucenim tabom izmedju {}
+imap {} {}jji<CR>jjko 
+
+"mapiranje da se na neki laksi nacin poziva easymotion
+"trazenje reci unapred
+nmap ss \\w
+"trazenje reci unazad
+nmap aa \\b
+
+"moram da pokusam da nadjem tag fajl koji sam geenrisao negde iznad -DO JAJA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"inace prvo sam samo u korenom direktorijumu pozvao ctags -R . koji je izgenerisao sve tagove za direktorijume koji se nalaze ispod ovog
+"a zatim sam uveo donju liniju koja kaze da ctag trazi tag fajl u ternutnom folderu kao i u tri stepena iznad - SAVRSENO
+"<C-]> - go to definition
+"<C-T> - jump back to definition
+"<C-w><C-]> - Open the definition in a horizontal split
+"map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+"map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+"<C-\> - Open the definition in a new tab
+"map <A-]> - Open the definition in a vertical 
+"This will check the current folder for tags file and keep going one directory up all the way to the root folder. SO you can be in any sub-folder in your project and it'll be able to find the tags files"
+"paznja!!!!!!!!!!!tags fajl mora da bude kreiran pre nego se pdigne vim!!!!!!!!!!!!!!!!"
+""Ctrl+] - go to definition
+""Ctrl+T - Jump back from the definition.
+""Ctrl+W Ctrl+] - Open the definition in a horizontal split
+""
+""Add these lines in vimrc
+""map <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+""map <A-]> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+""
+""Ctrl+\ - Open the definition in a new tab
+""Alt+] - Open the definition in a vertical split
+""
+""After the tags are generated. You can use the following keys to tag into and tag out of functions:
+""
+""Ctrl+Left MouseClick - Go to definition
+""Ctrl+Right MouseClick - Jump back from definition
+set tags=./tags;/
+"F7 ce da mi otvori prozor veritkalno a F6 ce da mi otvori prozor horizontalno!!!!!!!!!!!!!!
+map <F7> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
+map <F6> <C-w><C-]>
+"savrseno!!!!!!!!!!!!!!!!!!!!!!!sa:tn i :tp se krecem kroz razlicite definicije funkcije!!!!!!!!!!!!!!!!!!!!!!!!!!"
+"iskljucicu ova remap jer mi puno smeta!!!!!!!!!!!ne mogu nomralno da izadjem iz visual mode-a!!!!!!!!!!!!!!!!!
+"map <ESC> <C-w><C-c>
+map <A-q> <C-w><C-c>
+"kroz prozore se ide ctrl+w sa odgovarajucim smerom gore, dole, levo desno (j, k, h, l)
+
+"sada cu da pokusam da namestim i csope - nece ovo ipak moci - ovaj program je nominalno napravljen za Linux!!!!!!!!!!!!!!!!!!!!!!zivecu bez njega!!!!!!na Windows-u:-)
+"ovo je put do csope
+"NAMESTIO SAM I CSCOPE!!!!!!!!!!!!!!!!!!!!!!SAMO SU POTREBNE OVE DVE DONJE LINIJE, GENERISANJE FAJLA SA 'cscope -bR' i dodavanjem (rucno baze!!!!!!!)
+"nakon toga mogu da korisitim bazu sa komandama datim u 'h cscope'
+"PRIMETIO SAM DA SE FAJLOVI KOJI POKUSAVA VIM DA OTVORI PREKO CSCOPE-A KRECU OD MESTA GDE SE NALAZIM PA PLUS PUTANJA OD FAJLA KOJI SADRZI BAZU PODATAKA. RESENJE JE DA SE NAPRAVI KAO STO JE DATO U PRIMERU GLOBALNA PROMENLJIVA KOJA SADRZI APSOLUTNU PUTANJU DO BAZE SA INFORMACIJAM O LABELAMA IL DA SE PRI KREIRANJU SAMOG DB FAJLA DA SE PRVO KREIRA ONAJ DB FAJL SA APSOLUTNIM IMENIMA FAJLOVA!!!!!!!!!!!!!!!!!!IZABRACU OVO PRVI POSTO MI TRENUTNO ZAVRSAVA POSAO!!!!!!!!!!!
+"NAMESTENO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+set csprg=d:\Projekti\vim\cscope.exe
+":cs add d:\Ingenico\Projects\IngeDev7\cscope.out
+"mislim da cu zadrzati ovaj quickfix"
+set cscopequickfix=s-,c-,d-,i-,t-,e-,g-,f-
+"potrebne su mi dve komande sa kojim cu da idem kroz spisak iz quickfix-a...
+"napred
+map <F12> :cn<CR>
+"nazad
+map <F12><F12> :cN<CR>
+"set csqf=s-,g-,d-,c-,t-,e-,f-,i-"
+"":copen 15
+"cs add d:\Ingenico\Projects\IngeDev7
+
+"pomeranje granica prozora
+map <Up> :1winc +<ENTER>
+map <Down> :1winc -<ENTER>
+map <Left> :1winc <<ENTER>
+map <Right> :1winc ><ENTER>
+
+"   's'   symbol: find all references to the token under cursor
+"   'g'   global: find global definition(s) of the token under cursor
+"   'c'   calls:  find all calls to the function name under cursor
+"   't'   text:   find all instances of the text under cursor
+"   'e'   egrep:  egrep search for the word under cursor
+"   'f'   file:   open the filename under cursor
+"   'i'   includes: find files that include the filename under cursor
+"   'd'   called: find functions that function under cursor calls
+	
+	"The result of your cscope
+    " search will be displayed in the current window.  You can use CTRL-T to
+    " go back to where you were before the search.  
+    "
+"dodao sam krajnji CTRL-o zato sto mi skace na prazan swap fajl koji ne znam kako za sada da iskljucim...
+"kapiram da je ovo resenje za sada potpuno ok!!!!!!!!!!!!!!"
+"   's'   symbol: find all references to the token under cursor
+   " nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR><C-o>
+   nmap <F10> :cs find s <C-R>=expand("<cword>")<CR><CR><C-o>
+	"   'g'   global: find global definition(s) of the token under cursor
+    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR><C-o>	
+	"   'c'   calls:izbacuje sve pozive ove funkcije tj na kojim se sve mestima poziva
+	""nmap <F10> :cs find c <C-R>=expand("<cword>")<CR><CR><C-o>
+	    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR><C-o>
+	"   't'   text:   find all instances of the text under cursor
+    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR><C-o>	
+	"   'e'   egrep:  egrep search for the word under cursor
+    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR><C-o>	
+	"   'f'   file:   open the filename under cursor
+    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR><C-o>	
+	"   'i'   includes: find files that include the filename under cursor
+   nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR><C-o>
+	"izbacuje sve funkcije koje poziva ova funkcija
+	""nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR><C-o>
+	"iz nekog razloga moraju ovde da se dodaju dva CTRL-o-a... ne znam zasto nece da izadje sa jednim
+	""nmap <F11> :cs find d <C-R>=expand("<cword>")<CR><CR>	
+
+" Napomene (saveti):
+" Insert Normal mode is a special version of Normal mode, which gives us one bullet - <C-o>
+" U insert modee-u se mogu pozivati registri sa <C-r>{registar} a moze i doslovno da se unese registar (bez uvlacenja i tumacenja specijalnih karaktera) <C-r><C-p>{registar}
+" zz u normal mode-u postavlja trenutnu liniju na centar ekrana
+" "_d{motion} performs a true deletion - tj kada nesto brisem sa d (tj cut-ujem) i smestim u registar _ onda sam taj sadrzaj zaista izbrisao!mozda mapirati ovaj poziv da zaista imam brisanje!!!!!!!!!
+" We could cut the current line into register c by running :delete c, and then we could paste it below the current line with the :put c command.
+" "+ The X11 clipboard, used with cut, copy, and paste
+" "* The X11 primary, used with middle mouse button
+" sa ove dve gornje komande kapiram da  mogu i tekst iz Vim-a da smestim u globalni clipboard
+" Vim provides a handful of registers whose values are set implicitly:
+" "% Name of the current file
+" "# Name of the alternate file
+" ". Last inserted text
+" ": Last Ex command
+" "/ Last search pattern
+" gv to reselect the last visual selection
+" kada radim paste u visual mode-u onda ono sto selektujem (i onda pritisnem paste) se smesta u unnamed register a ono iz registra se stavlja na mestu selektovanog teksta!!!!!!!!!!!!!
+" znaci ono <C-r> u visual modu ce recimo ce ored da unese kao da je jedan rec ili karakter u pitanju
+" pored p postoji i gp, paste=
+" <C-v>{123} Insert character by decimal code (with decimal code 123) - ovo se odnosi na insert mode;A je 65 decimalno pa mogu videti koji je to nacin encoding-a!!!!!!!!!!!!!!decimalni mogu samo sa tri cifre da se predstave. ako hocu sa 4 cifre onda heksadecimalno napr kontra ? (tj naopako) - <C-v>u00bf. ga mi vraca code karatera pod tasterom. Definitivno je unicode!!!!!!!!!!!!!
+"  mozda da razmislim - surround.vim by Tim Pope - postavlja mi i/ili menaj deliminatore oko bilo kog tekstualnog objekta
+
+"automatsko menjanje fajla kada se izmeni na disku!!!!!!e sada da li je korisno ili ne??? kapiram da ce biti koristno???
+"DO JAJAAAAAAAAAAAAAAA!!!!!!!!!!!ekstra je kada koristim pozivanje skripta van vim-a i hocu da gledam rezultete uporedo sa obradom samog skripta!!!!!!!!!!!!SAVRSENO!!!!!!!!!!!!!!!!!!!!!!
+"DALJE!!!!!!!!!!!!!KADA RADIM OVAKO NESTO MOGU TRENUTNO DA MAPIRAM JEDAN TASTER DA POKRECE OVAJ SKRIPT VAN VIM-A!!!!!!!!!!!!!!
+"napr map <F12> :!start cmd /c "prebuild IT51 "${project_loc}" > rez.txt 2>&1"<ENTER> !!!!!!!!!!!!!!!!!!!SAVRSENO!!!!!!!!!!!!!!!!!!!!!!!
+	""	> GENIJALNO!!!!!!!!!!!!!!!!!!!!mogu da pozivam komande cmd.exe-a iz Vim-a!!!!!!!!!!!!!!
+				""!start cmd /k "prebuild IT51 "${project_loc}" > rez.txt 2>&1"
+				""!start cmd /c "prebuild IT51 "${project_loc}" > rez.txt 2>&1"
+				""< prva komanda otvara prozor i ceka da ga ja zatvorim
+				""< druga komanda sama zatvara prozor
+				""< inace ovde se pokrece skript i rezultati koji idu na standardni izlaz kao i na standardnu gresku ide u fajl rz.txt
+set autoread
+
+"nakon vundle-a instalirati ctags i cscope!!!!!!!!!!!!!!!
+"OVAJ SKUP KOMANDI BI TREBAO DA SE NADJE U MOM PRVOM SKRIPTU POSTO MORAM UVEK POSEBNO PONAOSOB DA IH UNESEM KADA UDJEM
+":cs add d:\Ingenico\Projects\IngeDev7\cscope.out d:\Ingenico\Projects\IngeDev7 - RELATIVNA PUTANJA ODAKLE TREBA DA POCNU DA SE PRIMENJUJU PODACI IZ SAMOG CSCOPE.OUT FAJLA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"" - proveriti da li sam dobro ovo kucao
+"ovo donje setovanje ne znaci puno za gvim ali deluje al iza obican vim znaci!!!!!!!!!!!!!"
+set background=dark
+colorscheme candycode
+"trebalo bi dodati i osvezavanje memorije tj baze za cscope i ctags (pozivanje bat fajla iz gVim-a)
+
+"ovo je dodatak za smestanje swap fajlova
+set directory=.,$TEMP
+"NAPOMENA: KADA SE NAKON POZIVA NOVOG VIMRC FAJLA POJAVE MARKIRANI DELOVI REDOVA ZNAIC DA NESTO NIJE BILO OK PRILIKOM OBRAADE SAMOG FAJLA NAPR KORISCEN JE FAJL KOJI NE POSTOJI - KORISTIO SAM SCOPE UMESTO CSCOPE!!!!!!!!!!!!!! ne mora da znaci iskljucio sam i ponovo ukljucio. zato sto sam iskljucivanjem i ukljucivanjem set hlsearch iskljucio ovaj problem...
+"savrseno!!!!!!!!!!!!!!!!!!!provalio sam novu karakteristiku u vim-u
+" ako hocu da uporedim dva fajla potrebno je samo da otvorim ta dva fajla u vertikalnom split-u i da unesem komandu diffthis - SAVRSENO!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"ako hocu da gasim unesem komandu diffoff
+"dodatne komande:
+""do - Get changes from other window into the current window.
+""dp - Put the changes from current window into the other window.
+""]c - Jump to the next change.
+""[c - Jump to the previous change.
+""Ctrl W + Ctrl W - Switch to the other split window.
+
+"kako da instaliram plugin koji mi se ne prikazuje u search-u vundle-a; kapiram da radi ovaj mehanizam!!!!!!!!!!!!!!!!
+""Place this in your .vimrc:
+""Plugin 'kshenoy/vim-signature'
+""… then run the following in Vim:
+"":source %
+"":PluginInstall
+
+"ako otvorim fajl u vim-u (pozivanjem van vim-a) i dalje mi se NerdTree otvara koji postoji oko dosadasnjih fajlova...ako hocu da kreiram NerdTree oko tek otvorenog fajl - NERDTreeFind
+" mapiranje za bildovanje java programa 
+" map <F12> :!start cmd /c "javac parser55og.java > rez.txt 2>&1"<ENTER>"
+"map <F11> :!start cmd /c "java parser55og 0110303801000E8102000000000000000004190001171201421008012330303030303031323135363730323237363230304A483132313232320032413231304634313943383233443330384439363536394438463234414142304201349F330360D8C89F02060000000004199F03060000000000009F1A020688950580000080005F2A0209419A031510089C01009F3704F838D16882021C005F3401019F26088694BEA76B56991E9F3602000C9F2701809F100706010A03A400009F3501259F34034103029F0902008C8407A00000000310108A023030910AE78CBDF111DFF0DF30300387 > log.txt 2>&1"<ENTER>"
+" zanimljivo - moguce je ubaciti skracenice..."
+"":abbreviate: Abbreviations for all modes
+"":iabbrev: Abbreviations for the insert mode
+"":cabbrev: Abbreviations for the command line only
+" mada nesto slicno mogu da postignem sa snip-ovim...koje uzgred budi receno ni ne koristim preterno"-) tj en koristim ih uopste!!!!!!!!!!
+"c-] skace na definiciju podatak u help-u a c-sh-t se vraca!!!!!!!!!!!!
+"ako hocu da pokrenem help sa recju ispod kursora:
+":map <F1> <ESC>:exec "help ".expand("<cWORD>")<CR>
+"mozda je bolje ovo mapiranje za kretanje kroz bafere???ili ne???"
+""map <C-right> <ESC>:bn<CR>
+""map <C-left> <ESC>:bp<CR>
+"ako smestim ovu liniju u vimrc 
+"i ako u tempolates definisem tpl fajlove onda ce se oni pozivati kada god kreiram odgovarajuci fajl sa ekstenzijom!!!!!!!!!!!!!!
+":autocmd BufNewFile * silent! 0r $VIMHOME/templates/%:e.tpl"
+"set wfh  
+""set wfw
+""(set WinFixHeight, set WinFixWidth)"
+"<c-r>reg je opcija da se odradi paste u Insert mode-u
+"<c-r><c-p>reg prenosi tekst doslovno - u slucaju da imas novi red ili tako nesto onda se lepo prenese bez da se poremeti... kapiram da ce se koristii predhodna varijanta, jer ce se ovim tipom kopirati obicno par reci ili rec
+"<C-o> - Insert Normal Mode - one bullet mode!!!!!!!!!!!!!"
+"<C-h> - brise jedan karakter iz insert mode-a"
+""Ctrl W gives you the "windows command mode", allowing the following modifiers:
+""Ctrl W + R - To rotate windows up/left.
+""Ctrl W + r - To rotate windows down/right.
+""You can also use the "windows command mode" with navigation keys to change a window's position:
+""Ctrl W + L - Move the current window to the "far right"
+""Ctrl W + H - Move the current window to the "far left"
+""Ctrl W + J - Move the current window to the "very bottom"
+""Ctrl W + K - Move the current window to the "very top"
+""Check out :help window-moving for more information
+"zatvaram fajla ali se ne zatvara prozor - kaze predji na sledeci bafer i zatvori poslednji koji je bio otvoren (alternativni)
+nnoremap <C-c> :bp\|bd #<CR>
+"ocekujem da mi ne radi resize...
+set noea
+" marks ce da izlista sve markere koje imam definisane a u okviru samog plugin-a signature postoji opcija m/ koja ce da izlista sve markere u trenutnom baferu"
+"You can, in fact, see any of the settings in Vim by simply using the :echo and adding an & in front of the setting's name—for example, :echo &somesetting." 
+"You can see which options you have in your sessions options using: :echo &sessionoptions"
+"While recording a macro it's easy to do mistakes. And when that happens, it's easier to edit the already recorded macro than to re-record it. Lets say we have recorded new macro in register a . We can print the content of the macro in the current buffer using :put a and then edit the macro in Vim. Once macro is changed, we can select it and then yank it to register a with "ay . Then we are ready to execute the new macro from register a with @a ."
+" pokrete koje sam radio sa f/F i t/T mogu da se ponove sa , i ; nazad odnosno napred!ponovice se poslednji korisceni pokret!!!!!!!!!!ne deluje mi nesto posebno tesko za pamcenje posto mi i treba poslednji korisceni a znam koji sam koristio poslednji!!!!!!!!!"
+"u r registar sam stavio macro koj ce da mi omogucuje da radim zamenu reci na cijem sam pocetku sa sadrzaj registra e!!!!!!!!!!!!!!!!!!!!!!!!! ako hocu da vidim i da izmenim odredjeni registar samo ga ubacim u tekuci fajl sa put i onda ga obradim i zatim samo kopiram taj sadrzaj u registar koji zelim da pozovem tj registar je ujedno i bafer u kome se smesta sam makro!!!!!!!!tj ne bih trebalo da koristim registar r - replace i moram uvek koristiti registar e u koji cu da smestim ciljanu rec!!!!!!!!!!!!ponovo pozivanje macro-a @@"
+"ako zelim da dodam novi snip mate onda ga samo u zavisnosti od jezika dodam u odgovarajuci snippets fajl c:\Users\vlastimir\vimfiles\bundle\snipMate\snippets\"
+"ovde je da t izbor svih opcija koje mogu dase podesavaju sa set u cim=u option-list"
+"ispada da se sesije snimaju na sledeci nacin...ako samo snimim ime_sesije.vim fajl onda se on snima u istom folder u i ne moze se kasnije ponovo pozvati osim iz tog foldera ili sa celom putanjom do foldera...tj realnije je da ih smimam sesije sa celom putanjom do fodlera sa sesijama...c:\Users\vlastimir\vim\vim74\sessions\ ili $HOME\vim\vim74\sessions\"
+"<C-t> se vraca posle skoka na definiciju funkcije au gVim-u mogu skacem i sa klasicnum skokom derzim ctrl i pritisnem misem tag na koji zeilm da skocim"
+"prlikom unosa komandi sa komandne linije . - ternutna linija, $ - kraj fajla, % - ceo fajl"
+"repeat last ex command @:"
+"ga mi ocitava hex idecimalnu vrednost karaktera pod kursorom a <C-v>u00bf - gde je ovaj broj u hexdecimalnom formatu. naravno <c-v> se poziva u insert modu;unicod, specijalni karatkeri
+"komand aargdo izvrsava komandu na svim fajlovima koji se podrazumevaju u otvorenim baferima napr :argdo @w ce pozvati u paraleli makro w na svim fajlovima iz liste. :argo write upisuje sve fajlove ili :wall
+"The argument list represents the list of files that was passed as an argument when we ran the vim command."
+"We can also set the contents of the argument list using this form :args {list} - savrseno!!!!!!!!!!!!!!!i onda na grupi tih fajlova mogu da radim sta hocu!!!!!!!!!!!!!!
+":args `cat .chapters` - specifies args list with entries in file .chapters (ako hocu da formiram listu argumenta odredjenim redosledom)
+"pwd mi daje trenutni folder
+"When Vim is launched, it adopts the same working directory that was active in the shell.
+":edit %:h<Tab> unosi u komandnu liniju putanju do ternutnog bafera...
+"The ‘path’ option allows us to specify a set of directories inside of which Vim will search when the :find command is invoked
+"<C-n> Generic keywords
+""<C-x><C-n> Current buffer keywords
+""<C-x><C-i> Included file keywords
+""<C-x><C-]> tags file keywords
+""<C-x><C-k> Dictionary lookup
+""<C-x><C-l> Whole line completion
+""<C-x><C-f> Filename completion
+""<C-x><C-o> Omni-completion
+"To get the most from the autocomplete command, learn how to interact with the pop-up menu. Either refine the choices and then pick an item, or dismiss the list if it doesn’t contain what you want.
+"<C-p><C-n> ili kontra omogucuje real time filter.krenem da kucam napr tri slova otkucam ove komande i onda mi se ne menja ovo sto sam do sada ukucao a ne gasi se pop up menu...isto moze i za ostale complite funkcije samo tu na kraju mora <CS-p>"
+"It’s important to understand that Vim’s filename autocompletion always expands paths relative to the working directory, not relative to the file that is currently being edited - tj kapiram da on vidi i nudi samo fajlovi ispod trenutnog pwd!!!!!!!!!!!!i to relativno u odnosu na dati direktorijum (koji mogu da dobije ako unesem pwd)."
+"Just like in the shell, cd - switches to the previous working directory
+"odraditi ovo za omni-coplition - :h compl-omni-filetypes i onda podesiti sta je potrebno za c
+" verujem da bi ovako nesto moglo i za java-u da se odradi...za c mi i nije potrebno za sistemske pozive nego za moje funkcije...videcu kada ponovo geenerisem tags-ove da li ce i kako ce se popnasati..."
+"If you want to complete system functions you can do something like this.  Use
+""ctags to generate a tags file for all the system header files: >
+""	% ctags -R -f ~/.vim/systags /usr/include /usr/local/include
+""In your vimrc file add this tags file to the 'tags' option: >
+	""set tags+=~/.vim/systags"
+"To figure out how to write omni-completion plugins, start with :h complete-functions"
+"The <C-a> and <C-x> commands perform addition and subtraction on numbers.nominlano je korak 1 ali ako zelim na neki broj da dodam ili oduzmem odredjeni broj pre pozvia ovih komandi unesem koji broj zelim da saberem odnosno oduzmem"
+"kada je fajl read=only onda se pozove w! i snimam sta zelim!!!!!!!!!!!!!"
+"ova linije koda u kombinaciji sa odgovarajucim cgtas fajlom bi mozda mogla dosta da mi pomogne
+""1. Put code_complete.vim to plugin  directory.                           
+""2. Use the command below to create tags file including signature field.     
+   ""ctags -R --c-kinds=+p --fields=+S . "
+"u insert modu pritisnem <c-v> i onda taster i dobijam koji kod stize do vim-a kada pritisnem ovaj karakter.slicno tome mogu da vidim sta terminal prima kada pritisnem odredjeni karakter: cat -vt i onda nakon sto unesem odredjeni karaker onda vidim sta terminal prima"
+"inace problem sa vim-om na cygwin-u sam resio tako sto sam preslikao <c-[>OQ kao da je F2 tj preslikao sam u ono sto mi radi F2 na normalnoj konfiguraciji!!!!!!!"
+"odradi izmenu na jednu od ove dve reci '<,'>s/\v(<DMPFN>|<trcFS>)/posaljiNaPC/gc \v s e ulazi u rezim tako da rade reg ex"
+"kada se pozove vimdiff ikada zelim da idem kroz razlike pozivam ]c i [c
+" kada unesem cindent onda se poremeti uvlacenje iz ingedev-a. ako hocu da vratim kako je bilo kao u ingedev onda treba pokrenuti ova dva sreach and replace -a
+" '<,'>s/        /    / - zamena 8 space-ova za 4
+"'<,'>s/\v^\s*\/\//\/\// - vracanje komentara na pocetak
+""
+"pokusaj da kreiram shourtcut za copy paste reci bez da dohvatam registar"
+"ono sto poslednje kopiram ostaje u registru 0 - sa ii cu da kopiram registar 0 umesto reci ispod kursora!!!!!!!!"
+""nmap ii bve"0p
+""nmap oo bve"tp
+"Something I just discovered recently that I thought was very cool: - ekstra fora!!!!!!!!!!!!!!!!!
+"":earlier 15m
+""Reverts the document back to how it was 15 minutes ago. Can take various arguments for the amount of time you want to roll back, and is dependent on undolevels. Can be reversed with the opposite "command :later
+"unodlist - izgleda da je moguce naci apsolutno sve izemene napr ako unesem izmenu x pa se vratim na staro pa unesem izmenu y u vim-u je moguce vratiti se na izmenu x!!!!!!!!!"
+":! [command] executes an external command while you're in vim.
+""But add a dot after the colon -- :.! [command] -- and it'll dump the output of the command into your current window. That's : . !
+""For example:
+"":.! ls"
+"ekstra ekstra!!!!!!!!!!!!!!!!!!!!!!!!znaci da :.! komanda smesta rezultat komande odmah u tekuci dokument!!!!!!!!!
+" da vidim tekst kao hex editor
+"down vote
+"":%!xxd
+""Make vim into a hex editor.
+"":%!xxd -r
+""Revert.
+""Warning: If you don't edit with binary (-b), you might damage the file. – Josh Lee in the comments
