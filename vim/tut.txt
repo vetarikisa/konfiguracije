@@ -15,4 +15,7 @@
         > cabbrev: Abbreviations for the command line only
 - git
         > ako u fajl config pod remote sekciju dodam user u sledecem fomratu nece mi traziti savki put kada radim push
-        url = https://username@repository-url.com 
+        url = https://username@repository-url.com  - NAPOMENA: ipak ne radi ovaj mehanizam!kada sam usao u config fajl video sam da je ponisten ovaj username!
+        > cini mi se da ce ovo biti pravo resenje (naravno staviti u config fajl u .git folder):
+        [credential https://github.com/vetarikisa/konfiguracije.git]
+        username = 5und1erboB
