@@ -1,0 +1,11 @@
+- diff
+        > ako hocu da uporedim dva fajla potrebno je samo da otvorim ta dva fajla u vertikalnom split-u i da unesem komandu diffthis - SAVRSENO!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        > otvorim dva fajla koja zelim da poredim (split)
+        > onda pozovem dithis za oba fajla - dobijam uporedni prikaz fajlova sa istaknutim razlikama
+        > ako hocu da gasim unesem komandu diffoff
+        >dodatne komande:
+                < do - Get changes from other window into the current window.
+                < dp - Put the changes from current window into the other window.
+                < ]c - Jump to the next change.
+                < [c - Jump to the previous change.
+                < Ctrl W + Ctrl W - Switch to the other split window.

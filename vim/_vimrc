@@ -387,15 +387,6 @@ colorscheme candycode
 "ovo je dodatak za smestanje swap fajlova
 set directory=.,$TEMP
 "NAPOMENA: KADA SE NAKON POZIVA NOVOG VIMRC FAJLA POJAVE MARKIRANI DELOVI REDOVA ZNAIC DA NESTO NIJE BILO OK PRILIKOM OBRAADE SAMOG FAJLA NAPR KORISCEN JE FAJL KOJI NE POSTOJI - KORISTIO SAM SCOPE UMESTO CSCOPE!!!!!!!!!!!!!! ne mora da znaci iskljucio sam i ponovo ukljucio. zato sto sam iskljucivanjem i ukljucivanjem set hlsearch iskljucio ovaj problem...
-"savrseno!!!!!!!!!!!!!!!!!!!provalio sam novu karakteristiku u vim-u
-" ako hocu da uporedim dva fajla potrebno je samo da otvorim ta dva fajla u vertikalnom split-u i da unesem komandu diffthis - SAVRSENO!!!!!!!!!!!!!!!!!!!!!!!!!!!
-"ako hocu da gasim unesem komandu diffoff
-"dodatne komande:
-""do - Get changes from other window into the current window.
-""dp - Put the changes from current window into the other window.
-""]c - Jump to the next change.
-""[c - Jump to the previous change.
-""Ctrl W + Ctrl W - Switch to the other split window.
 
 "kako da instaliram plugin koji mi se ne prikazuje u search-u vundle-a; kapiram da radi ovaj mehanizam!!!!!!!!!!!!!!!!
 ""Place this in your .vimrc:
