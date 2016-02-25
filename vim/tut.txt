@@ -13,9 +13,21 @@
         > abbreviate: Abbreviations for all modes
         > iabbrev: Abbreviations for the insert mode
         > cabbrev: Abbreviations for the command line only
+- vec postojeci registri tj sta se pamti po default-u:
+        > "% Name of the current file
+        > "# Name of the alternate file
+        > ". Last inserted text
+        > ": Last Ex command
+        > "/ Last search pattern
+        > gv to reselect the last visual selection
 - git
         > ako u fajl config pod remote sekciju dodam user u sledecem fomratu nece mi traziti savki put kada radim push
         url = https://username@repository-url.com  - NAPOMENA: ipak ne radi ovaj mehanizam!kada sam usao u config fajl video sam da je ponisten ovaj username!
         > cini mi se da ce ovo biti pravo resenje (naravno staviti u config fajl u .git folder):
         [credential https://github.com/vetarikisa/konfiguracije.git]
-        username = 5und1erboB
+        username = 5und1erboB - NAPOMENA: ne radi ni ovaj nacin, sta vise ne da mi ni add da odradim - vraca mi gresku
+         > sada cu da probam i definitivno:
+        $ git config credential.helper store
+        $ git push http://example.com/repo.git
+        Username: <type your username>
+        Password: <type your password>
