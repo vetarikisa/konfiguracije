@@ -1,0 +1,111 @@
+snippet main
+	public static void main (String [] args) {
+		${1:/* code */}
+	}
+snippet pu
+	public
+snippet po
+	protected
+snippet pr
+	private
+snippet st
+	static
+snippet fi
+	final
+snippet ab
+	abstract
+snippet re
+	return
+snippet br
+	break;
+snippet de
+	default:
+		${1}
+snippet ca
+	catch(${1:Exception} ${2:e}) ${3}
+snippet th
+	throw 
+snippet sy
+	synchronized
+snippet im
+	import
+snippet j.u
+	java.util
+snippet j.i
+	java.io.
+snippet j.b
+	java.beans.
+snippet j.n
+	java.net.
+snippet j.m
+	java.math.
+snippet if
+	if (${1}) { 
+			${2}
+	}
+snippet el
+	else 
+snippet elif
+	else if (${1}) ${2}
+snippet wh
+	while (${1}) { 
+			${2}
+	}
+snippet for
+	for (${1}; ${2}; ${3}) ${4}
+snippet fore
+	for (${1} : ${2}) ${3}
+snippet sw
+	switch (${1}) ${2}
+snippet cs
+	case ${1}:
+		${2}
+	break;
+	${3}
+snippet tc
+	public class ${1:`Filename()`} extends ${2:TestCase}
+snippet t
+	public void test${1:Name}() throws Exception ${2}
+snippet cl
+	class ${1:`Filename("", "untitled")`} ${2}
+snippet in
+	interface ${1:`Filename("", "untitled")`} ${2:extends Parent}${3}
+snippet m
+	${1:void} ${2:method}(${3}) ${4:throws }${5}
+snippet v
+	${1:String} ${2:var}${3: = null}${4};${5}
+snippet co
+	static public final ${1:String} ${2:var} = ${3};${4}
+snippet cos
+	static public final String ${1:var} = "${2}";${3}
+snippet as
+	assert ${1:test} : "${2:Failure message}";${3}
+snippet tok
+	try {
+	${1:ime} = new ${2:KlasaStreama}(${3:pocetni});
+	} catch(IOException ex) {//ovde bi trebao neki stack trace tj stampa svih pozvanih funkcija sa steka
+			ex.printStackTrace();//kapiram da ovog nacina prikazivanja greske treba da se drzim
+	} finally {
+			if (${4:ime}!=null) {
+						try {${5:ime}.close();} catch(IOException ex) { System.out.println("Neuspelo zatvaranje ${6:ime} stream!"); }
+			}
+	}
+snippet fin
+	if (${1:ime}!=null) {
+				try {${2:ime}.close();} catch(IOException ex) { System.out.println("Neuspelo zatvaranje ${3:ime} stream!"); }
+	}
+snippet sep
+	String sep = System.getProperty("file.separator");
+snippet dir
+	String dir = System.getProperty("user.dir");
+snippet {}
+	{
+			${1}
+	}
+#izgleda da mi je ova donja akrobacija zabranjena zbog automatskog dopisivanja zagrada...razmislicu da ovo izbrisem tj automatsko zatvaranje zagrada
+#snippet ()
+#	(${1})${2}
+snippet ""
+	"${1}"${2}
+snippet <
+	<${1}>${2}
