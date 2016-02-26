@@ -350,13 +350,6 @@ map <Right> :1winc ><ENTER>
 " "+ The X11 clipboard, used with cut, copy, and paste
 " "* The X11 primary, used with middle mouse button
 " sa ove dve gornje komande kapiram da  mogu i tekst iz Vim-a da smestim u globalni clipboard
-" Vim provides a handful of registers whose values are set implicitly:
-" "% Name of the current file
-" "# Name of the alternate file
-" ". Last inserted text
-" ": Last Ex command
-" "/ Last search pattern
-" gv to reselect the last visual selection
 " kada radim paste u visual mode-u onda ono sto selektujem (i onda pritisnem paste) se smesta u unnamed register a ono iz registra se stavlja na mestu selektovanog teksta!!!!!!!!!!!!!
 " znaci ono <C-r> u visual modu ce recimo ce ored da unese kao da je jedan rec ili karakter u pitanju
 " pored p postoji i gp, paste=
@@ -399,10 +392,6 @@ set directory=.,$TEMP
 " mapiranje za bildovanje java programa 
 " map <F12> :!start cmd /c "javac parser55og.java > rez.txt 2>&1"<ENTER>"
 "map <F11> :!start cmd /c "java parser55og 0110303801000E8102000000000000000004190001171201421008012330303030303031323135363730323237363230304A483132313232320032413231304634313943383233443330384439363536394438463234414142304201349F330360D8C89F02060000000004199F03060000000000009F1A020688950580000080005F2A0209419A031510089C01009F3704F838D16882021C005F3401019F26088694BEA76B56991E9F3602000C9F2701809F100706010A03A400009F3501259F34034103029F0902008C8407A00000000310108A023030910AE78CBDF111DFF0DF30300387 > log.txt 2>&1"<ENTER>"
-" zanimljivo - moguce je ubaciti skracenice..."
-"":abbreviate: Abbreviations for all modes
-"":iabbrev: Abbreviations for the insert mode
-"":cabbrev: Abbreviations for the command line only
 " mada nesto slicno mogu da postignem sa snip-ovim...koje uzgred budi receno ni ne koristim preterno"-) tj en koristim ih uopste!!!!!!!!!!
 "c-] skace na definiciju podatak u help-u a c-sh-t se vraca!!!!!!!!!!!!
 "ako hocu da pokrenem help sa recju ispod kursora:

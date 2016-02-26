@@ -1,0 +1,153 @@
+- bat(ch) fajlovi su programi koji sadrze niz komandi za Windows-ov terminal (DOS). Potrebno je naravno kao i svaki program postaviti sam fajl u folder koji se nalazi u PATH promenljivo
+- obicno se kao prva komanda pojavljuje:
+        @echo off
+        > inace se svaka komanda prikazuje na terminalu ali ako se pozove echo off onda se taj prikaz ukida.a sam znak @ na pocetku znaci ni da se echo off nece prikazati
+- sam echo prikazuje sve sto se nalazi iza njega ili pak prosledjuje u fajl:
+        echo KCV naseg master kljuca kripotvanog transoprtnim >> log.txt
+        > prikaza same promenljive preko komande echo:
+        echo %mydate% %mytime% >> log.txt
+        > ili nesto komplikovaniji prikaz:
+        echo PIN blok za PIN %PIN%, PAN(bez lrc-a)  %PAN%, kriptovani sesijski %CRYPT_SESSION%, clear master %CLR_MASTER% >> log.txt
+- e sada pipe-ovanje i slicne metode upravljanja:
+        command > filename        Redirect command output to a file
+        command >> filename       APPEND into a file
+        command < filename        Type a text file and pass the text to command
+        commandA  |  commandB     Pipe the output from commandA into commandB
+        commandA &  commandB      Run commandA and then run commandB
+        commandA && commandB      Run commandA, if it succeeds then run commandB
+        commandA || commandB      Run commandA, if it fails then run commandB
+- za komentar se koristi rem
+- prelazak u novi root: d:
+- ako hocu da zaustavim program da ocekuje ENTER onda pozivam komandu pause
+- start otvara komandnu liniju (tj startuje program) i odlazi do odgovarajuce lokacije (tj prosledjuje komandu tom programu)
+        > sa /k bi cmd prozor trebalo da se otvori i da ostane otvoren
+        start cmd.exe /k "cd d:\Projekti\XGD-ADS\tools\UDiskDL2.0\UDiskDL2.0"
+        > a sa /c bi trebalo da se komanda odradi ali da se onda prozor zatvori
+        start cmd.exe /c opFiles
+        > e sada neke naknadne napomene:
+            < ovde je bilo neophodno da postavim program files pod navodnike
+            start C:\"Program Files"\INGENICO\IngeDev_7\IngeDev.exe
+            < ili vise argumenata:
+            start chrome "https://translate.google.com/?hl=sr&tab=TT" "http://www.b92.net/sport/" "http://www.oreilly.com/openbook/make3/book/ch01.pdf" "https://www.google.rs/webhp?source=search_app&gws_rd=cr,ssl&ei=ffClVciPMYmwsAGhoIfIDA" "http://www.cplusplus.com/" "http://www.howtogeek.com/t/features/page/37/"
+            < startovanje acrobat reader-a:
+            rem <Acrobat path> /A "<parameter>=<value>" "<PDF path>"
+            start AcroRd32.exe /n/h /A "page=749" "d:\Projekti\java\knjige\Thinking in Java 4th Ed.pdf"
+            < pokreatnje nekog drugog programa:
+            start C:\Lotus\Notes\notes.exe "=C:\Lotus\Notes\notes.ini"
+            < e sada glavna napomena je sledeca - svaki program bi trebalo da ima uputstvo za pokretanje sa komandne linije pa se u odnosu na to uputstvo jednostavno smesti poziv odredjenog programa u bat.naravno taj program se moze pozvati i sa komandne linije pojedinacno - u sustini bat i jeste niz jednosavnih komandi koje se mogu uneti preko terminala.
+- setovanje promenljive:
+            SET PIN="1234"
+            > velika napomena:NOTE: Do not use whitespace between the name and value; SET foo = bar will not work but SET foo=bar will work.
+            > inace ako se ne deklarise onda je prazan string tj nominalno je promenljiva string
+            > a ako hocemo u promenljivu da smestimo broj:
+            The /A switch supports arthimetic operations during assigments. This is a useful tool if you need to validated that user input is a numerical value.
+            SET /A four=2+2
+            4
+- if struktura:
+IF EXIST tags (
+del /q tags
+) 
+- evo ovde je data for petalja ali nisam potpuno siguran kako funkcionise:
+        For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+        For /f "tokens=1-2 delims=/:" %%a in ('time /t') do (set mytime=%%a:%%b)
+        > neke napomene ali necu sada ulaziti detaljnije:
+        To use the FOR command in a batch program, specify %%variable instead of %variable. Variable names are case sensitive, so %i is different from %I.
+- sa tasklist se izlistava lista procesa
+- taskkill /pid 1230 /pid 1241 /pid 1253  - ubija procese sa pid-om 1230, 1241, 1253
+- postoji i komanda findstr koja nalazi odredjeni string u fajlu/fajlovima
+        > findstr "computer help" myfile.txt - In the above example, any lines containing "computer help" would be printed to the screen.
+        > findstr /s "computer help" *.txt - Similar to the first example, the above example would find any lines containing "computer help" in any txt file in the current directory and all sub directories.
+- mozda ovim komandama nije mesto ovde ali:
+        > generisanje ctag fajl od foldera gde je pozvana ctags do dna (rekurzivno)
+        ctags -R
+        > ovo je generisanje cscope fajlova - oni mi omogucavaju da izlistam pozive odredjene funkcije u celom projektu - ctags mi daje prikaz definicije funkcije
+        > e sada prikaz rada sa telnet-om:
+        SET SAJT="www.b92.net"
+        SET LOG_FAJL=".\CMD_HTTP_logs.txt"
+        telnet %SAJT% 80 -f %LOG_FAJL%
+        GET /index.html HTTP/1.0
+        > ovako se smesta u LOG_FAJL odgovor na HTTP zahtev
+        - primanje podataka sa tastature:
+        //primi podatak u _dept a ako se nista ne unese postavi promenljivu na NothingChose
+        Set /P _dept=Please enter Department || Set _dept=NothingChosen
+        //ako je promenljiva NothingChosen onda skaci na gresku - moguce je koristiti labele za skokove
+        If "%_dept%"=="NothingChosen" goto :sub_error
+        If /i "%_dept%"=="finance" goto sub_finance
+        If /i "%_dept%"=="hr" goto sub_hr
+        goto:eof
+        > ovde je data detaljnija obrada if komande:
+        IF
+        Conditionally perform a command.
+        File syntax
+           IF [NOT] EXIST filename command 
+           IF [NOT] EXIST filename (command) ELSE (command)
+        String syntax
+           IF [/I] [NOT] item1==item2 command 
+           IF [/I] item1 compare-op item2 command
+           IF [/I] item1 compare-op item2 (command) ELSE (command)
+        Error Check Syntax
+           IF [NOT] DEFINED variable command
+           IF [NOT] ERRORLEVEL number command 
+           IF CMDEXTVERSION number command
+        key
+           item        A text string or environment variable, for more complex
+                       comparisons, a variable can be modified using
+                       either Substring or Search syntax.
+           command     The command to perform.
+           filename    A file to test or a wildcard pattern.
+           NOT         perform the command if the condition is false. 
+           ==          perform the command if the two strings are equal. 
+           /I          Do a case Insensitive string comparison.
+           compare-op  can be one of
+                        EQU : Equal
+                        NEQ : Not equal
+                        LSS : Less than <
+                        LEQ : Less than or Equal <=
+                        GTR : Greater than >
+                        GEQ : Greater than or equal >=
+                        This 3 digit syntax is necessary because the > and <
+                        symbols are recognised as redirection operators
+        IF will only parse numbers when one of (EQU, NEQ, LSS, LEQ, GTR, GEQ) is used. 
+        The == comparison operator always results in a string comparison.
+        IF ERRORLEVEL n statements should be read as IF Errorlevel >= number
+        i.e.
+        IF ERRORLEVEL 0 will return TRUE when the errorlevel is 64
+        A more precise method of checking Errorlevels is to use the %ERRORLEVEL% variable:
+        IF %ERRORLEVEL% GTR 0 Echo An error was found
+        IF %ERRORLEVEL% LSS 0 Echo An error was found
+        IF %ERRORLEVEL% EQU 0 Echo No error found
+        IF %ERRORLEVEL% EQU 0 (Echo No error found) ELSE (Echo An error was found)
+        IF %ERRORLEVEL% EQU 0 Echo No error found || Echo An error was found
+        Note some errors are negative numbers.
+        When working with errorlevels in a batch file it's a good idea to also use SETLOCAL so that the %ERRORLEVEL% variable is reset each time the batch file runs.
+        IF EXIST filename will return true if the file exists (this is not case sensitive). 
+        Examples:
+        IF EXIST C:\logs\*.log (Echo Log file exists)
+        IF EXIST C:\logs\install.log (Echo Complete) ELSE (Echo failed)
+        IF DEFINED _department ECHO Got the _department variable
+        IF DEFINED _commission SET /A _salary=%_salary% + %_commission% 
+        IF CMDEXTVERSION 1 GOTO start_process
+        IF %ERRORLEVEL% EQU 2 goto sub_problem2
+        Does %1 exist?
+        To test for the existence of a command line parameter - use empty brackets like this
+        IF [%1]==[] ECHO Value Missing
+        or
+        IF [%1] EQU [] ECHO Value Missing 
+        In the case of a variable that might be NULL - a null variable will remove the variable definition altogether, so testing for NULLs becomes easy:
+        IF NOT DEFINED _example ECHO Value Missing
+        IF DEFINED will return true if the variable contains any value (even if the value is just a space)
+        Test the existence of files and folders
+        IF EXIST name - will detect the existence of a file or a folder - the script empty.cmd will show if the folder is empty or not.
+        Parenthesis
+        Parenthesis can be used to split commands across multiple lines. This enables writing more complex IF… ELSE… commands:
+        IF EXIST filename.txt (
+            Echo deleting filename.txt
+            Del filename.txt
+         ) ELSE ( 
+            Echo The file was not found.
+         )
+        When using parenthesis the CMD shell will expand [read] all the variables at the beginning of the code block and use those values even if the variables value has just been changed. Turning on DelayedExpansion will force the shell to read variables at the start of every line.
+- ovo je zanimljiv link gde bi mozda mogle da postoje ostale potrebne informacije - http://ss64.com/nt/
+- brisanje svih direktorijum i poddirektorijuma:
+        > sa ovom komandom sam pobrisao sve foldere i fajlove iz folder-a i isto tako u irektorijumima
+        rmdir /s/q - s - podirektorijumi a q je da se odradi sve bez dodatnih pitanja
