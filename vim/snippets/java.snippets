@@ -105,7 +105,34 @@ snippet {}
 #izgleda da mi je ova donja akrobacija zabranjena zbog automatskog dopisivanja zagrada...razmislicu da ovo izbrisem tj automatsko zatvaranje zagrada
 #snippet ()
 #	(${1})${2}
-snippet ""
-	"${1}"${2}
+#ovaj donji snippet nema smisla zato sto ovaj tip dopunjavanja imam vec ugradjen preko nekog plugin-a...u kombinaciji sa ff radi savrseno
+#snippet ""
+#	"${1}"${2}
 snippet <
 	<${1}>${2}
+#snippet-i za unos doc komentara
+# snippet za class-u
+snippet docc
+	/**
+	* <h1>${1:naslov}</h1>
+	* ${2:opis}
+	* <p>
+	* <b>Note:</b> ${3:ako postoji}
+	* @author  Vlastimir Djokic
+	* @version 1.0
+	* @since   ${4:ako postoji}
+	*/
+# snippet za method-u
+snippet docm
+	/**
+	* ${1:opis}
+	* @param ${2:ime parametra - iz metode} ${3:opis parametra}
+	* @return ${4:povratna vrednost}
+	* @exception ${5:greska koja se vraca} ${6:opis}
+	* @see ${7:napr neke od class-a koja se gore koristi, recimo class-a greske koja se vraca}
+	*/
+# variable (field)
+snippet docv
+	/**
+	 * ${1:opis promenljive/polja}
+	 */

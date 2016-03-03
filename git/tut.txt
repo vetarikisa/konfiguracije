@@ -1,0 +1,85 @@
+- ode se u folder projekta koji se zeli pratiti pomocu Git-a
+- odradi se git init
+- zatim se sa git add dodaju fajlovi koji zele da se prate
+- i definitivno se sa git commit -m "komentar" postavi inicijalna verzija projekta tj inicijalni HEAD
+- ako se pak zeli pokrenuti novi projekat koji ce se pratiti sa Git-m a taj projekat je na nekom Git serveru potrebno je pozvati komandu git clone putanja_do_repository_koji_zelimo_da_kloniramo
+- treba uociti da se ovde poziva clone a ne checkout tj Git kopira celo 'stablo' projekta a ne samo sliku HEAD-add
+- “Getting Git on a Server” - ovde se daju opcije za pristupanje serverima kao i prednosti i mane svakog nacina
+- git status je komanda da vidim koji fajl je u kom stanju
+- podesio sam vizuelni prikaz https://danlimerick.wordpress.com/2011/06/19/git-for-window-tip-use-p4merge-as-mergetool/
+- otprilike skinuo sam samo p4merge (ne ceo paket) i otkucao ove dve linije koda:
+git config --global merge.tool p4merge
+git config --global mergetool.p4merge.cmd 'p4merge.exe \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"'
+- git config --global core.editor podesavanje editora koji hocu da koristim kada treba da unesem komentar commit-a
+- ovaj graficki 'uporeditelj' ide samo jedan po jedan fajl!!!!!!!!manej vise mislim da nije problem!!!!!!!!!!!
+- tumacenje perspektiva:
+	* zuti kvadratic je cini mi se working directory
+	* ljubicasto (pica parce) HEAD
+	* zeleni krug je staged
+- ako se zeli odmah prilikom komitovanja uneti i poruka (tj komentar prilikom komita):
+git commit -m "Story 182: Fix benchmarks for speed"
+- Adding the -a option to the git commit command makes Git automatically stage every file that is already tracked before doing the commit - ovo mi se cini kao uobicajena situacija!!!ali ne moze da 
+se primenjuje na fajlove koji nisu track-ovani tj koji se vec nalaze na HEAD-u.
+- najbolji format za prikazivanje log-a Git-a:
+git log --pretty=format:"%h - %an, %ar : %s"
+- cini mi se da je ovaj format proizvoljan. Na 62. strani su dati opisi gore navedenih specifikatora.
+- za log postoji i opcija koliko zadnjih komitovanja zelim da vidim ali je ipak mnogo korisnija i popilarnija opcija - the time-limiting options such as --since and --until are very useful.
+- if you wanted to find the last commit that added or removed a reference to a specific function, you could call:!!!!!!!!!!!!!!!savrseno!!!!!!!!!!!!!!
+$ git log -Sfunction_name
+- It’s important to understand that git checkout -- [file] is a dangerous
+command. Any changes you made to that file are gone – you just copied
+another file over it. Don’t ever use this command unless you absolutely
+know that you don’t want the file.
+- Remember, anything that is committed in Git can almost always be recovered!!!!!!!!!!!!!!!
+- However, anything you lose that was never committed is likely never to be seen again!!!!!!!!!!!!!!!!!!!!!
+- Remote repositories are versions of your project that are hosted on the Internet or network somewhere.
+- Postoje dve verzije tagovanja:
+$ git tag -a v1.4 -m 'my version 1.4'
+$ git tag
+- A lightweight tag is very much like a branch that doesn’t change – it’s just a pointer to a specific commit.
+- Annotated tags, however, are stored as full objects in the Git database. They’re checksummed; contain the tagger name, e-mail, and date; have a tagging message; and can be signed and verified 
+with GNU Privacy Guard (GPG).
+- To create a lightweight tag, don’t supply the -a, -s, or -m option.
+- To tag that commit, you specify the commit checksum (or part of it) at the end of the command:
+$ git tag -a v1.2 9fceb02
+- By default, the git push command doesn’t transfer tags to remote servers.
+You will have to explicitly push tags to a shared server after you have created
+them. This process is just like sharing remote branches – you can run git push
+origin [tagname].If you have a lot of tags that you want to push up at once, you can also use
+the --tags option to the git push command.
+- moguce je postaviti alijase i to na sledeci nacin:
+git config --global alias.co checkout
+	- sada se umesto checkout moze pisati co
+- Branching means you diverge from the main line of development and continue to do work without messing with that main line.
+- When you make a commit, Git stores a commit object that contains a pointer to the snapshot of the content you staged.
+- Staging the files checksums each one (the SHA-1 hash we mentioned in Chapter 1), stores that version of the file in the Git repository (Git refers to them as blobs), and adds that checksum to
+	the staging area.
+- Znaci git checkout ime_branhca u sustini samo pinteru HEAD dodeljuje vrednost koja sada pokazuje na novi branch koji sam kreirao sa git branch. I sada kada budem vrsio commit ili sta vec 
+	sve ce se posmatrati u odnosu na ovaj novi branch. A branch mu u sustini dodje nesto kao tagovanje. A sa checkout sa branch-om samo se HEAd-u dodeljuje nova vrenost tj pokazivac na 
+	dati branch.
+- $ git checkout -b iss53 je krace za dve komande:
+$ git branch iss53
+$ git checkout iss53
+- Naredne dve komande :
+	git checkout feature
+	git rebase master	
+	- This moves the entire feature branch to begin on the tip of the master branch, effectively incorporating all of the new commits in master.
+- ako zelim dasvucem odredjeni tag sa Git repository-ja:
+	//will give you the whole repository.
+	git clone 
+	//After the clone, you can list the tags with
+	git tag -l
+	//and then checkout a specific tag: 
+	git checkout tags/<tag_name>
+	- to avoid the ambiguity, run git checkout tags/<name>. Otherwise, Git assumes that you meant to retrieve branch <name>
+- na strani 157. je detaljan i dobar prikaz kako izgleda realna situacija komitovanja i povlacenja koda sa remote depository-ja - naravno nakon prelaska preko osnovna 2 , 3 poglavlja
+- NAPOMENA: generalno su ovde dati primeri koje bi trebalo razumet tj ako njih kapiram dobro sam razumeo kako funkcionise Git!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- na strani 204. je jedana savrsen scenario: kada nadjem projekat na GitHub-u koji moze da mi koristi samo kliknem fork i projekat se kopira na moj profil. Zatim na mom racunaru pozoven clone
+	i odradim sta hcu (na kraju mogu i da posljem moj rad na server ako hocu). Naravno, moram imati otvoren nalog na GitHub-u.
+- cygwin:
+	> dos2unix.exe _vimrc - ovaj program se koristi kada se tekstualni fajl koji je pravljen na windows-u zeli pretvoriti u fajl koji razume uniz opertivni sistem
+	> kada zelim startovati filesystem windows-a: cd /cygdrive/c/
+	> sa bi se dobilo 256 boja na cygwin-u treba namestiti parametar TERM na:
+		Try export TERM=xterm-256color or equivalent. You can add that to the appropriate dotfile if you want it to be persistent. You can use a 256-color demo script like this to verify functionality.
+	> setovanja cygwin-a se izgleda smetaju u .bashrc!!!!!!!!!!!tako cu i ovu gornju promenljivu da smestim u .bashrc
+        > genijalna je ideja rad sa vi mode-om u tmux-u!!!!!!!!!!!!sa PREFIX [ se ulazi u vi mode-e sa SPACE se pali visual mode nakon toga se sa ENTER kaze - kopiraj to sto sam selektovao, nakon toga sam izasao i imam kopiran podatak u bafer-u i mogu da ga pozovem sa PREFIX ]. sama lista bafer-a se dobija ako se pozove PREFIX = i onda sa ENTER jednostavno pozovem selektovani bafer!!!!!!!!!!!

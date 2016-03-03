@@ -1,0 +1,204 @@
+- ovde cu smestiti neke specificne linije koda - snippets.java (lakse mi je da gledam posle taj kod ako ga editor prepoznaje kao java kod)
+- programi:
+        > kriptovanje - crypto
+        > koder/dekoder - cod_dec
+- crypto
+- cod_dec
+- knjige cu ipak staviti na fles - eventualno ako se nesto radi bas po jednoj knjizi napr java cryptography
+- postoji biblioteka koja odradjuje prihvatanje pdoataka sa komandne linije - http://commons.apache.org/proper/commons-cli/
+	> obrada gresaka i sve ostalo...
+	> mozda da odradim preko maven-a pa da uvucem i ovu bilioteku preko maven-a...
+- junit:
+							Unit testing will make your life easier. It will make your designs better and drastically reduce the amount of time you spend debugging.
+							The ?rst step is to decide how to test the method in question—before writing the code itself. With at least a rough idea of how to proceed,
+							you proceed to write the test code itself, either before or concurrently with the implementation code. Next, you run the test itself, and 
+							probably all the other tests in that part of the system, or even the entire system’s tests if that can be done relatively quickly. It’s important 
+							that all the tests pass, not just the new one. You want to avoid any collateral damage as well as any immediate bugs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	> skinuo sam i Pragmatic Unit Testing in Java with JUnit - Andrew Hunt & David Thomas - The Pragmatic Programmer.pdf
+	> Saveti za pisanje junit testova:
+	Let’s take a look at six speci?c areas to test that will strengthen your testing skills, using your RIGHT -BICEP:
+		• Right — Are the results right?
+		• B — Are all the boundary conditions CORRECT?
+		• I — Can you check inverse relationships?
+		• C — Can you cross-check results using other means?
+		• E — Can you force error conditions to happen?
+		• P — Are performance characteristics within bounds?
+- javadoc
+		> ako hocuda dodam private clanove samo je potrebno da postavim -private atribut i onda ce biti uneti i private clanovi!!!!!!!!!!!!!!!!!
+		> Javadoc comments only have meaning when they appear before a public class, or before public or protected variables and methods!!!!!!!!!!!!!!!!
+			< http://alvinalexander.com/java/edu/pj/pj010014
+        > http://www.tutorialspoint.com/java/java_documentation.htm
+        > ovde je savrsen primer za javadoc:
+import java.io.*;
+
+/**
+* <h1>Add Two Numbers!</h1>
+* The AddNum program implements an application that
+* simply adds two given integer numbers and Prints
+* the output on the screen.
+* <p>
+* <b>Note:</b> Giving proper comments in your program makes it more
+* user friendly and it is assumed as a high quality code.
+*
+* @author  Zara Ali
+* @version 1.0
+* @since   2014-03-31
+*/
+public class AddNum {
+   /**
+   * This method is used to add two integers. This is
+   * a the simplest form of a class method, just to
+   * show the usage of various javadoc Tags.
+   * @param numA This is the first paramter to addNum method
+   * @param numB  This is the second parameter to addNum method
+   * @return int This returns sum of numA and numB.
+   */
+   public int addNum(int numA, int numB) {
+      return numA + numB;
+   }
+
+   /**
+   * This is the main method which makes use of addNum method.
+   * @param args Unused.
+   * @return Nothing.
+   * @exception IOException On input error.
+   * @see IOException
+   */
+   public static void main(String args[]) throws IOException
+   {
+
+      AddNum obj = new AddNum();
+      int sum = obj.addNum(10, 20);
+
+      System.out.println("Sum of 10 and 20 is :" + sum);
+   }
+}
+        > samo nad java fajlom pozvati javadoc i onda se generisu svi ovi fajlovi a ja startujem javadoc samo startovanjem fajla koji nosi ime kao i sama klasa
+        > jednostavno se pozove:
+		javadoc -d ./doc *.java - i kreirace javadoc za sve java fajlove u ovom folderu i smestice java doc opis u doc fodler u folderu gde je pozvan javadoc. startovati prikaz klasa sa index.html
+        > detaljnije objasnjenje:
+        http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html#@return
+        >@return (reference page)
+        Omit @return for methods that return void and for constructors; include it for all other methods, even if its content is entirely redundant with the method description.
+		> primer list u javadoc kodu:
+		 * <ul>
+ * <li>The Component to draw on
+ * <li>A translation origin for rendering and clipping coordinates
+ * <li>The current clip
+ * <li>The current color
+ * <li>The current font
+ * <li>The current logical pixel operation function (XOR or Paint)
+ * <li>The current XOR alternation color
+ *     (see <a href="#setXORMode">setXORMode</a>)
+ * </ul>
+- jedan od dnevnika koji sam kreirao dok sam obradjivao thinking on java:
+        - krenucu sa unutrasnjim klasama
+            >When you create an inner class, an object of that inner class has a link to the enclosing object that made it, and so it can access the members of that enclosing object—without any special 
+                qualifications. In addition, inner classes have access rights to ALL the elements in the enclosing class. This is very different from the design of nested classes in C++, which is simply a 
+                namehiding mechanism. There is no link to an enclosing object and no implied permissions in C++.
+            > If you want to make an object of the inner class anywhere except from within a non-static  method of the outer class, you must specify the type of that object as 
+                OuterClassName.InnerClassName!!! ovakav nacin pozivanja je potreban kako bi bilo moguce da unutrasnja klasa ima mogucnost pristupa elementima spoljasnje klase - sama unitrasanja
+                klasa implicitno kao parametar koristi i referencu na spoljnu klasu. Ali sve to radi kompajler pa programer ne mora da brine o tome, jednostavno poziva polja i metode spoljne klase kao
+                da su elementi same unutrasenj klase.
+            > So an inner class has automatic access to the members of the enclosing class!!!!!!!!!!!!!!
+            > kada u okviru unutrasnje klase hocu da pozovem metodu spoljne klase (sa this) koristim OuterClass.this a kad zelim da se referenciram da objekat unutrasenj klase samo this - DotThis primer.
+            > Ako u samoj spoljnoj klasi ne postoji metoda za kreiranje objekta unutrasejn klase - objekat unutrasenj klase se formira na sledeci nacin:
+                DotNew.Inner dni = dn.new Inner();
+            > It’s not possible to create an object of the inner class unless you already have an object of the outer class!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!However, if you make a nested class (a static inner class), 
+                then it doesn’t need a reference to the outer-class object!!!!!!!!!!!!!!!!!!!!!!
+            > JASNO!!!!!!!!!nije mi bas jasno - Inner classes and upcasting??? kakve veze imaju upcast-ing i downcast-ing sa svim ovim??? ipak mi je jasno... Naime, kada kreiram objekat odredjene klase i kada mu 
+                definisem tip, ako kao tip navedem interfejs (po kome je objekat kreiran) ili ako kao tip navedem roditeljsku klasu onda dolazi do upcast-ovanja. Dobijena referenca je tip-a roditeljske klase
+                (ili interfejsa). E sada... Ako je inner klasa private onda se ne moze kreirati na nacin OuterClassName.InnerClassName!!!!!!!! moze jedino da se kreira preko metode koja vraca referencu
+                na odgovarajucu inner klasu ali se kao tip (vracene reference) mora navesti interfejs - koji naravno mora biti dostupan javno (ili javno dostupna roditeljska klasa)!!!!!!!!!!!!!!!!!
+            > e sada pored klasicnih 'plain' klasa, koje su jednostavno polja spoljne kalse, postoje i inner klase koje su definisane u drugim okvirima. Postoje 2 razloga zasto se koriste:
+            Inner classes can be created within a method or even an arbitrary scope. There are two reasons for doing this:
+                1. As shown previously, you’re implementing an interface of some kind so that you can create and return a reference. (to that public interface)
+                2. You’re solving a complicated problem and you want to create a class to aid in your solution, but you don’t want it publicly available.
+            > tipovi ne-plain klasa:
+                1. A class defined within a method - local inner class - OK
+                2. A class defined within a scope inside a method - OK
+                3. An anonymous class implementing an interface - OK
+                4. An anonymous class extending a class that has a non-default constructor -OK
+                5. An anonymous class that performs field initialization - OK
+                6. An anonymous class that performs construction using instance initialization (anonymous inner classes cannot have constructors) - OK
+            > Anonymous klase - What this strange syntax means is "Create an object of an anonymous class that’s inherited from parent class/interface." The reference returned by the new expression is 
+            automatically upcast to a parent class/interface reference.
+            > kod kreiranja anonymous klase mora se voditi racuna, iza new ide - The name of an interface to implement or a class to extend!!!!!!!!!!!!!!!!
+            > If you’re defining an anonymous inner class and want to use an object that’s defined outside the anonymous inner class, the compiler requires that the argument reference be final, as you see 
+            in the argument to destination( ) - primer Parcel9.
+            > If you don’t need a connection between the inner-class object and the outerclass object, then you can make the inner class static. This is commonly called a nested class.
+            > A nested class means:
+                1. You don’t need an outer-class object in order to create an object of a nested class.
+                2. You can’t access a non-static outer-class object from an object of a nested class.
+        - generalna prica:
+            > private Object[] items;//!!!deklaracija niza - nije potrebno da se navede duzina niza
+                items = new Object[size];//!!! kreiranje niza
+            > this je u sustini referenca na objekat (konkretne klase)!!!!!!!!!!!!!!!!!!
+            > Remember that an interface automatically makes all of its members public.
+            > protected - mogu da mu pristupaju samo klase u istom paketu kao i izvedene klase
+            > treba imati u vidu da svaki access modifier ima dve dimenzije:
+                * kako se taj element klase (polje ili metoda) vidi s' polja gledano na klasu
+                * kako se taj element vidi u izvedenoj klasi
+            > Normal (non-inner) classes cannot be made private or protected!!!!!!!!!!!!!! U fajlu koji se zove kao i (jedina) public class-a u fajlu moze da postoji samo jedna public klasa i neogranicen
+                broj klasa koji imaju podrazumevan modifier!!!nisam siguran koji je podrazumevani modifier za class-e, kapiram da je paketni???
+            > treba imati u vidu da je java (kao i svi objektno orijentisani jezici) pravljena sa idejom o ogromnim projektima a dve osnovne smernice su:
+                * ponovno iskoriscavanje koda - nasledjivanje i kompozicija tj vec napisane klase se mogu iskoriscavati
+                * lakse odrzavanje - inkapsulacija tj moguce je prepravaljti kod bez da korisnik zna (potrebno je samo da interfejs prema korisniku ostane identican)
+            > upcast mu dodje izgleda cast-ovanje prema gornjoj klasi (roditeljskoj klasi). Napr svaka klasa moze da se upcast-uje na klasu Object. However, when you cast down the hierarchy to a more 
+                specific type this manner of casting is called downcasting.
+            > The effect of producing an interface reference from an object that implements it is essentially the same as upcasting to a base class.
+            > Ako se definise interfejs i ako u okviru klase definisem private klasu koja realizuje interfejs. Nakon kreiranja private innner klase programeru klijentu su dostupne samo metode koje su definisane 
+            u samom interfejsu (koje su podefiniciji public) i nista osim toga.
+            > GENIJALNO!!!!!!!!!!!ako mi je potrebno da samo malo izmenim ponasanje jedne metode u klasi to veoma jednostavno mogu da obavim preko anonymous klasa - samo treba da redefinisem 
+            metodu od interesa. Naravno sam interfejs klase (metoda) se ne sme menjati!!!!!!!!!!!!!!!!!!
+            > u sutini anonymous klase su samo skracena anotacija koja ima smisla ako cu da kreiram samo jednu malo izmenjenu klasu tako da cu se ja licno drzati podalje od njih ali moram da razumem
+            kako funkcionisu kako bih mogao da razumeme kod drugih ljudi.
+            > A class containing abstract methods is called an abstract class. If a class contains one or more abstract methods, the class itself must be qualified as abstract. (Otherwise, the compiler gives 
+            you an error message.) - znaci ako samo jedno polje ili metodu proglazim abstract onda moram i celu class-u proglasiti abstract. Cilj svega ovoga je da se spreci klijent programer da nasledjuje
+            metode bez ikakvog koda u okviru njih.If you inherit from an abstract class and you want to make objects of the new type, you must provide method definitions for all the abstract methods in the 
+            base class. If you don’t (and you may choose not to), then the derived class is also abstract, and the compiler will force you to qualify that class with the abstract keyword. Znaci ako hocu da 
+            od abstract-ne klase kreiram normalnu klasu ond amoram da realizujem sve njene abstract-ne metode!!!!!!!!!!!ako to ne uradim (realizujem samo neke) onda i ta izvedena metoda mora biti
+            deklarisana kao abstract!!!!!!!!!!!Compiler ce prikazivati gresku i nece dozvoliti da se izgenerise kod koji sadrzi nedovrsene metode - zato je abstract key word i uvedena!!!!!!!!!!da bi skrenula
+            paznju na metode koje moraju biti realizovane!!!!!!!!!!!!!!
+            > ukratko abstract znaci da se ova metoda mora realizovati ako hocu da nasledim ovu abstract-nu metodu (klasu, interfejs)
+            > kod anonymous klasa, ako hocu da koristim neki parametar koji ne postoji kod roditeljske klase onda taj objekat mora imati modifier final!!!!!!!!!!!!
+            > Remember the advice given at the end of the last chapter: Prefer classes to interfaces. If your design demands an interface, you’ll know it. Otherwise, don’t put it in until you are forced to!!!!!!!!!
+            > If you want to have only a single piece of storage for a particular field, regardless of how many objects of that class are created, or even if no objects are created. The other is if you need a 
+            method that isn’t associated with any particular object of this class. That is, you need a method that you can call even if no objects are created.You can achieve both of these effects with the 
+            static keyword. When you say something is static, it means that particular field or method is not tied to any particular object instance of that class.
+            > static polju je moguce pristupiti i preko reference objekta i preko imena klase: Using the class name is the preferred way to refer to a static variable. Not only does it emphasize that variable’s 
+            static nature, but in some cases it gives the compiler better opportunities for optimization. Isto vazi i za metode.
+            > You can’t apply the static keyword to local variables, so it only applies to fields. local variables su promenljive u okviru metoda.
+            > static polja se kreiraju pre izvrsavanja main methode i pre izvrsavanja konstruktora klase (a izmedju static polja i konstruktora se kreiraju ostala polja)!!!!!!!!!!GENIJALNA INFORMACIJA!!!!!!!!!!
+            > KADA KREIRAM KLASU PRVO SE KREIRAJU STATIC POLJA, OSTALA POLJA PA SE IZVRSAVA ONKSTRUKTOR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            > Remember the advice given at the end of the last chapter: Prefer classes to interfaces. If your design demands an interface, you’ll know it. Otherwise, don’t put it in until you are forced to!!!!!!!!
+            > Fields and methods in ordinary inner classes can only be at the outer level of a class, so ordinary inner classes cannot have static data, static fields, or nested classes. However, nested 
+            classes can have all of these. Obicna inner klasa najjednostavnije pristupa poljima spoljne klase bez ikakvih dodatnih referenci - kao da su njena polja.
+            > Iterator pattern is very commonly used design pattern in Java and .Net programming environment. This pattern is used to get a way to access the elements of a collection object in sequential 
+            manner without any need to know its underlying representation.
+            > GENIJALNO - UNUTRASNJA (NE STATIC) KLASA MOZE DA KORISTI ELEMENTE SPOLJNE KLASE BEZ DA NAVODI IME SPOLJNE KLASE (CAK I PRIVATE ELEMENTE)ILI 
+            IMESPOLJNE KLASE.THIS!!!!!!!!!!!!!!
+            > Normally, you can’t put any code inside an interface, but a nested class can be part of an interface. Any class you put inside an interface is automatically public and static. Since the class is 
+            static, it doesn’t violate the rules for interfaces — the nested class is only placed inside the namespace of the interface.
+            > It’s convenient to nest a class inside an interface when you want to create some common code to be used with all different implementations of that interface.
+            > GENIJALNO - Earlier in this book I suggested putting a main( ) in every class to act as a test bed for that class. Naravno to je dodatni kod ali nema veze kada se sve lepo odradi main se moze
+            izbrisati gde smeta.
+            > GENIJALNO - This generates a separate class called TestBed$Tester (to run the program, you say Java TestBed$Tester, but you must escape the ‘$’ under Unix/Linux systems). You can use 
+            this class for testing, but you don’t need to include it in your shipping product; you can simply delete TestBed$Tester.class before packaging things up. - ako hocu da pokrenem static klasu u
+            okviru neke druge klase (u ovom slucaju to je TestBed).
+            > Zasto inner klase? Typically, the inner class inherits from a class or implements an interface, and the code in the inner class manipulates the outer-class object that it was created within. So you 
+            could say that an inner class provides a kind of window into the outer class.
+            > OGROMNA NAPOMENA: treba imati u vidu da u java-i nije moguce visestruko nasledjivanje tj da klasa naseldi vise roditeljskih klasa. Ali moze da realizuje vise interfejsa i da ima vise inner klasa!!!
+            > So the most compelling reason for inner classes is:
+                        Each inner class can independently inherit from an implementation. Thus, the inner class is not limited by whether the outer class is already inheriting from an implementation.
+                        Ukratko, cini mi se da je na kraju osnovna primena (tj ono sta se ne moze uraditi ni na jedan drugi nacin) visestruko nasledjivanje vise klasa!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        That is, inner classes effectively allow you to inherit from more than one non-interface.
+                        If you didn’t need to solve the "multiple implementation inheritance" problem, you could conceivably code around everything else without the need for inner classes!!!!!!!!!!!!!!
+            > That is, inner classes effectively allow you to inherit from more than one non-interface.
+            > anonymous klasa: posle reci new ide ime interfejsa ili roditeljske klase koja se zeli naslediti pa onda u okviru {} iza kojih se nalazi sama realizacija (nasledjivanje) ide ;!!!!!!!!!!!!!!SAVRSENO!!!!!!
+            >  klasa ne moze da nasledjuje vise od jedne abstract klase
+            > BITNO: A closure is a callable object that retains information from the scope in which it was created.The closure provided by the inner class is a good solution—more flexible and far safer than a pointer.
+            One of the most compelling arguments made to include some kind of pointer mechanism in Java was to allow callbacks. With a callback, some other object is given a piece of information that 
+            allows it to call back into the originating object at some later point. This is a very powerful concept!!!!!!!!!!!!!!!!!!!!!!!
+            > BITNO: super je referenca na roditeljsku klasu!!!!!!!!
+            > stigao do 283. strane
