@@ -171,3 +171,22 @@
         > inace problem sa vim-om na cygwin-u sam resio tako sto sam preslikao <c-[>OQ kao da je F2 tj preslikao sam u ono sto mi radi F2 na normalnoj konfiguraciji!!!!!!!"
 - ono sto poslednje kopiram ostaje u registru 0 - sa ii cu da kopiram registar 0 umesto reci ispod kursora!!!!!!!!"
 - odradi izmenu na jednu od ove dve reci '<,'>s/\v(<DMPFN>|<trcFS>)/posaljiNaPC/gc \v s e ulazi u rezim tako da rade reg ex. Ako hocu da odradim search&replace!!!!!!!!obratiti paznju na \v!!!!!!!!!!!
+- detaljnija uputstva za rad sa autocmoplite-om:
+        > <C-n> Use the next match from the word list (next match)
+        > <C-p> Use the previous match from the word list (previous match)
+        > <Down> Select the next match from the word list
+        > <Up> Select the previous match from the word list
+        > <C-y> Accept the currently selected match (yes)
+        > <C-e> Revert to the originally typed text (exit from autocompletion)
+        > <C-h> (and <BS>) Delete one character from current match
+        > <C-l> Add one character from current match
+        > {char} Stop completion and insert {char}
+        > a ako hocu da dovrzim zapocetu rec sa odredjenim skupom:
+                < <C-n> Generic keywords
+                < <C-x><C-n> Current buffer keywords
+                < <C-x><C-i> Included file keywords
+                < <C-x><C-]> tags file keywords
+                < <C-x><C-k> Dictionary lookup
+                < <C-x><C-l> Whole line completion
+                < <C-x><C-f> Filename completion
+                < <C-x><C-o> Omni-completion

@@ -202,3 +202,5 @@ public class AddNum {
             allows it to call back into the originating object at some later point. This is a very powerful concept!!!!!!!!!!!!!!!!!!!!!!!
             > BITNO: super je referenca na roditeljsku klasu!!!!!!!!
             > stigao do 283. strane
+- applying-uml-and-patterns-3rd.pdf
+	> 

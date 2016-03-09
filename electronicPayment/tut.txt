@@ -1,0 +1,327 @@
+- EMV transaction flow
+	> najgrublje opisan tok
+		< kartica salje SELECT FILE komande
+		< kada se nadje aplikacija na kartici koju terminal podrzava salje se komanda GET PROCESSING OPTIONS
+			~ kartica na GPO odgovara sa AFL-om (spiskom recorda iz odredjenih AEF-ova) i AIP-om (spisak svih algoritama koje kartica podrzava ili zahteva)
+		< onda se na osnovu AFL-a koji se dobio od kartice sa READ RECORD traze podapci sa kartice
+		< i na kraju GENERATE APPLICATION CRYPTOGRAM
+			~ naravno ako serverska strana trazi moguce je da se salje drugi GENERATE APPLICATION CRYPTOGRAM
+	> nesto preciznije objasnjen odnos razlicitih koraka iza ova tri je:
+		1) selektuje se aplikacija
+		2) terminal trazi podatke na osnovu kojih obavlja:
+			- data authenticaiton
+			- processing restriction
+			- cardholder verification
+			- terminal risk management
+		3) na osnovu rezultata predhodnih koraka obavlja se terminal action analysis - na kraju se generise AC (Application Cryptogram)
+		4) nakon prijema AC-a kartica obavlja card action analysis i odgovara terminalu
+		5) sa dobijenim odgovorom terminal odgovara serveru
+		6) transakcija se zavrsava ili se generise jos jedan AC (i ponavljaju se koraci 5 i 6, sa tim da se u koraku 6 sada zavrsava transakcija)
+	> sada cu da pokusam da detaljnije objasnim pojedinacne korake iz predhodnih 6 koraka:
+		< ovde cu samo da navedem pojedinacne pojmove (koji je deo kog koraka sa viseg logickog nivoa)
+		< data authentication - ovaj deo zahteva najvise istrazivnja i posvecenosti???:
+			~ offline Static Data Authentication (SDA)
+			~ offline Dynamic Data Authentication (DDA)
+			~ offline Combined Data Authentication (CDA) -??? da li je offline ili online???kapiram da je i ovo offline!!!!
+		< processing restrictions
+			~ Application Version Number
+			~ Application Usage Control
+			~ Application Effective/Expiration Dates Checking
+		< cardholder verification
+			~ offline PIN processing
+			~ online PIN processing
+			~ signature
+			~ combined (nekih od gore navedena 3)
+		< terminal risk management
+			~ limit checking ??? sta je od ovih limita sta??? specificnosti za Visa/MC
+				1) CVM limit check
+				2) floor limit check
+				3) contactless limit check
+			~ random transaction selection
+			~ velocity checking
+		< kartica moze da primi i da odgovori sa jednim od sledecih AC (Application Cryptogram-a): - e sada kako su kreirane ove skracenice da ga jebem...???
+				1) AAC (transaction declined)
+				2) ARQC (online authorization request)
+				3) TC (transaction approved).
+	> detaljnije objasnjenje gore navedenih koraka
+		< 
+	> komande (kao i format pitanja i odgovora) koje se koriste kako bi se sprovele sve gore navedene operacije
+		< tagovi i uopste informacije koje se koriste u komunikaciji tj EMV obradi (kako contact tako i contactless)
+		< na 43oj strani 3. EMV knjige dat je skup svih mogucih komadi izmedju terminala i kartice. ali se u samoj transakciji najcesce koriste:
+			~ GENERATE APPLICATION CRYPTOGRAM
+			~ READ RECORD
+			Nakon odgovora na GPO POS kernel na POS terminalu sadrzi spisak AEF-ova (tj njihove SFI-jeve) i spisak rekorda u okviru svakog AEF-a koji su porebno za dalji rad
+			Sa READ RECORD komandom se te informacije citaju
+			Request poruka READ RECORD-a napr:
+			00 B2 02 0C 00
+			Prva dva bajta su identicna
+			Treci bajt je rekord
+			Uprvih 5 bit sa leve strane 4 bajta se nalazi SFI (tj AEF) u kome se nalazi ovaj record (rekord).
+			Znaci ova gornja komanda kaze "dohvati mi drugi rekord (record) iz AEF-a 2"!!!!!!!!!!!!!
+			Ovako se pozivajusvi pojedinacni rekord dok se ne procita ceo AFL!
+			Odgovor na READ RECORD komandu je u formatu:
+			70 length podaci - podaci su niz TLV tagova
+			70 - Application Elementary File (AEF) Data Template!!!!!!cini se kao logican templae!
+			~ SELECT - knjiga 1 strana 129
+			The SELECT command is used to select the ICC PSE, DDF, or ADF sorresponding to submitted file name or AID.
+			Najcesci format je:
+			00 A4 04 00 duzina_AID-a_ili_imen-a_file-a AID_ili_ime_file-a
+			Pod imenom fajla se podrazumeva i onaj korenski direktorijum platnih aplikacija PAY...pa nesto...
+			Odgovor na SELECT je FCI template 6F u okviru koga se nalazi FCI propietary template A5. FCI - File Control Information - dobija terminal kad selektuje aplikaciju preko AID-a!
+			Pored A5 taga koji je obavezan dobija se jos jedan obavezan tag:
+				84 - DF Name (u sustini to je AID na osnovu koga sam i referencirao samu aplikaciju)
+			E sada...sam sadrzaj A5 taga zavisi da li selektujem(o) PSE, DDF ili ADF. Kada saljem AID odgovara se sa scenariom za ADF ( ADF se referencira AID-om!!!!!!!!)
+			Tagovi koji se dobijaju kao odgovor su (sve su opcioni):
+				50 - Application label
+				87 - Application Priority Indicator
+				9F38 - PDOL - u ovom tag su smesteni podaci koje kartica zahteva ako se trazi da odgovori na GET PROCESSING OPTIONS!!!!!
+				5F2D - language preference
+				9F11  - Issuer Code Table Index
+				9F12 - Application preffered Name
+				BF0C (slozeni tag) - FCI Issuer Discretionary Data
+			Svi ovo se odnosi na uspesnu komandu SELECT - 90 00 znaci file missing. Postoje i drugi odgovori ali necu sada ulaziti u njihovo objasnjavanje  (taziti SW1 SW2).
+			~ GET PROCESSING OPTIONS (GPO)
+			Nakon SELECT komande se sa terminala salje GPO komanda (koja se odnosi na selektovanu apilkaciju).
+			Request poruka ima sledeci format:
+			80 A8 00 00 02 83 00 - Prva 4 bajta su fiksna. Zatim ide duzina dodatnih podataka (u ovom slucaju 2 bajta) i onda PDOL (u ovom slucaju jedini dodatni podatak) koji je prazan. Cini mi da je ovo najcesci niz bajtova koji predstavlja GPO!
+			Kao odgovor se dobija:
+			80 duzina_narednih_podataka AIP+AFL - samo objasnjenje AIP-a i AFL-a je dato u odvojenim sekcijama
+			80 - Response Message Template Format 1 - Contains the data objects (without tags and lengths) returned by the ICC in response to a command???zasto se na GPO odgovara sa ovim template-om????
+			77 - Response Message Template Format 2 - cisto kao napomena
+			~ VERIFY
+			~ GET DATA (redje)
+			Sa ovom komandom mogu da se uzmu samo sledeca 4 taga:
+			• ATC (tag '9F36')
+			• Last Online ATC Register (tag '9F13')
+			• PIN Try Counter (tag '9F17')
+			• Log Format (tag '9F4F')
+			Format request komande je:
+			80 CA tag 00
+			Odgovor je samo TLV napr:
+			9F 17 01 03
+			~ VERIFY
+			00 20 00
+			~ GET CHALLENGE (redje)
+- Visa:
+	> contactless:
+		< VCPS - Visa Contactless Payment Specification
+		< DRL - Dynamic Reader Limits
+		< TTQ - Terminal Transaction Qualifiers
+		< qVSDC (quick Visa Smart Debit/Credit) and MSD (Magnetic Stripe Data) are contactless paths under a single Visa AID.
+		< To minimize the interaction time between the card and the reader, qVSDC readers support Reader Preliminary Transaction Processing (Pre-processing). The Amount, Authorized (tag '9F02') is obtained and transaction-based risk management is performed before requesting that the card be presented and initiating card discovery.
+		< qVSDC offers support for Offline Data Authentication (using fDDA) and is compliant with EMV in this processing, with the following exceptions:
+				1) Generation of the dynamic signature is initiated by the GPO command. The INTERNAL AUTHENTICATE command is not used and no DDOL is used.
+				2) The results of fDDA are not provided online to the issuer within the TVR or protected by the online authorization or clearing cryptograms.
+		< To minimize the duration in which the card must remain within the reader RF field, the reader may obtain the transaction amount and perform some risk management checks prior to prompting for card presentment.
+		< Discovery Processing is performed by the reader to poll for the presence of contactless cards that may have entered the reader’s RF field.
+		< PPSE - Proximity Payment Systems Environment
+		< Initiate Application Processing is where the card performs Card Action Analysis, (conditionally) generates the Application Cryptogram, (conditionally) generates the signature for Offline Data Authentication, and returns card application data.
+		< During Processing Restrictions, the reader checks the application expiration date, application usage, and may check whether the card application is on the Terminal Exception File.
+		< 
+- MasterCard:
+	> contactless:
+		< PPSE - PayPass Payment Systems Environment!!!!!!!!!!!!bice da je Visa napravila analognu pricu!!!!!!!!!!tj PPSE nije identican akronim na obe platforme ali kapiram da predstavlja isti pojam.
+		< Within the MasterCard PayPass transactions we distinguish two different profiles: M/Chip and Mag Stripe.
+		< The PayPass – Mag Stripe profile was developed to allow contactless payments using
+				authorization networks that presently support magnetic-stripe authorization for credit
+				or debit applications. A PayPass – Mag Stripe card stores track 1 and track 2 data
+				with a discretionary data field that contains a dynamic CVC (Card Verification Code).
+				The dynamic CVC is generated by the PayPass – Mag Stripe card using a secret key,
+				the Application Transaction Counter of the PayPass – Mag Stripe card and an
+				unpredictable number generated by the terminal. The PayPass – Mag Stripe card
+				with dynamic CVC provides better security than magnetic-stripe technology because
+				the dynamic CVC is used as authentication code by the issuer to authenticate the
+				PayPass – Mag Stripe card during the online authorization processing.
+		< The PayPass – M/Chip profile was developed to allow contactless payments in a
+				market that is oriented towards offline acceptance. To manage the offline risk the
+				terminal must be capable of performing terminal risk management and offline
+				authentication of the card (e.g. static data authentication). The PayPass – M/Chip
+				card must be capable of performing its own card risk management and of accepting or
+				declining the transaction offline.
+		< The PayPass card and terminal do not support offline PIN verification. This means the card does not support offline plaintext PIN nor offline enciphered PIN verification.
+		< Ukratko opis transakcije (manje vise ono sto sam vec napisao u vezi kontakt transakcije):
+		1. The terminal begins by selecting the PayPass Payment Systems Environment
+(PPSE) using the SELECT command.
+		2. The card responds with the File Control Information (FCI) including all the AIDs
+supported by the card with their priority indicator.
+		3. The terminal selects the AID with the highest priority that is supported by both
+card and terminal and issues the SELECT command with this AID.
+		4. The card responds with the File Control Information (FCI). The FCI may
+contain the Processing Options Data Object List (PDOL). The PDOL is a list of
+tags and lengths of terminal resident data elements needed by the card in the GET
+PROCESSING OPTIONS command.
+		5. The terminal issues the GET PROCESSING OPTIONS command. If there is no
+PDOL in the card, then the terminal uses the command data field ‘8300’.
+Otherwise the command data field contains a data object with tag ‘83’ and a value
+field comprising the concatenated list of data elements resulting from processing
+the PDOL.
+		6. The card returns the Application Interchange Profile (AIP) and the Application
+File Locator (AFL).
+		7. – 8. The terminal issues the READ RECORD command to retrieve the generic card
+application data elements (e.g. PAN, Application Expiry Date, etc…) located in
+the first record of the file with SFI 2. The response message of the card contains
+the record read including all the generic card application data elements.
+		9. – 10. If the card supports offline data authentication (static data authentication or
+combined DDA/AC generation), then the terminal issues the READ RECORD
+command to retrieve the card data elements necessary to recover the Issuer Public
+Key. These data elements are located in the first record of the file with SFI 3.
+		11. – 12. If the card supports static data authentication and the card does not support
+combined DDA/AC generation, then the terminal issues the READ RECORD
+command to retrieve the Signed Static Application Data. This data element is
+located in the second record of the file with SFI 3.
+		13. – 14 – 15. – 16. If the card supports combined DDA/AC generation, then the
+terminal issues two READ RECORD commands to retrieve the card data elements
+necessary to recover the ICC Public Key. These data elements are located in the
+first and second record of the file with SFI 4.
+		17. After terminal risk management (application expiry date checking, terminal floor
+limit checking, exception file checking, etc.) has been completed, the terminal
+makes a preliminary decision to decline the transaction offline, complete it online
+or accept it offline. This decision is based upon the Terminal Verification Results
+(TVR), the issuer action preferences and acquirer action preferences according to
+the method described in [EMV BOOK 3]. If the decision is to accept the
+transaction offline, then the terminal issues the GENERATE AC command
+requesting a TC. If the decision is to decline the transaction offline, then the
+terminal issues the GENERATE AC command requesting an AAC. In the case the
+terminal wants to complete the transaction online, then the terminal issues the
+GENERATE AC command requesting an ARQC.
+		18. Based upon the CDOL1 related data included in the data field of the GENERATE
+AC command, the card may perform its own card risk management. As a result
+of the card risk management process, the card may decide to complete a transaction
+online, accept offline or decline the transaction. In all three cases the card
+will generate an Application Cryptogram. If the card responds with a TC or an
+AAC, then the terminal completes the transaction offline. If the card responds
+with an ARQC, then the terminal attempts to go online, sending an authorization
+request message to the issuer. Included in the authorization request message is
+the ARQC for online card authentication
+			< The terminal determines which applications in the ICC are supported by comparing the AIDs for applications in the terminal with AIDs for applications within the card.
+			< To minimize processing in the card, the data field of the command messages is not
+				TLV encoded. The application in the card indicates the requested data, including
+				format and length, by sending a Data Object List (DOL) to the terminal. DOLs used
+				in this specification include the PDOL used with the GET PROCESSING OPTIONS
+				command, the CDOL1 and CDOL2 used with the GENERATE AC command, the
+				TDOL used to generate the TC Hash Value and the UDOL used with the COMPUTE
+				CRYPTOGRAPHIC CHECKSUM command.
+- Objasnjavanje termina koje se koriste u gore navedenim objasnjenjima:
+	< AID
+		> The structure of the AID is according to ISO/IEC 7816-5 and consists of two parts:
+			1. A Registered Application Provider Identifier (RID) of 5 bytes, unique to an application provider and assigned according to ISO/IEC 7816-5.
+			2. An optional field assigned by the application provider of up to 11 bytes. This field is known as a Proprietary Application Identifier Extension (PIX) and may contain any 0–11 byte value specified by the provider. The meaning of this field is defined only for the specific RID and need not be unique across different RIDs.
+		> ovde je bila data lista svih AID-ova: https://www.eftlab.com.au/index.php/site-map/knowledge-base/211-emv-aid-rid-pix
+		> u sustini ono sto je mozda potrebno zapamtiti je da je RID MC-a (MasterCard) A000000004 a Visa-in A000000003
+	< Certification Authority Public Key Index - CAPK
+		> tag 8F
+	< TAC (TIC)
+	< PAN
+		> zanimljiv link - http://stackoverflow.com/questions/72768/how-do-you-detect-credit-card-type-based-on-number
+		> Generalno pravilo za kreiranje PAN-a:
+		1) The credit/debit card number is referred to as a PAN, or Primary Account Number. The first six digits of the PAN are taken from the IIN, or Issuer Identification Number, belonging to the issuing bank (IINs were previously known as BIN — Bank Identification Numbers — so you may see references to that terminology in some documents). These six digits are subject to an international standard, ISO/IEC 7812, and can be used to determine the type of card from the number. Cesce se koristi termin BIN.
+		2) prva cifra se odredjuje prema sledecem obrascu:
+			0	ISO/TC 68 and other industry assignments
+			1	Airlines
+			2	Airlines, financial and other future industry assignments
+			3	Travel and entertainment
+			4	Banking and financial
+			5	Banking and financial
+			6	Merchandising and banking/financial
+			7	Petroleum and other future industry assignments
+			8	Healthcare, telecommunications and other future industry assignments
+			9	For assignment by national standards bodies
+		NAPOMENA:
+			~ Visa 4xxxxx
+			~ MC 51xxxx - 55xxxx
+			~ Discover 6011x, 644xxx, 65xxxx
+			~ Amex 34xxxx, 37xxxx
+		3) ostale cifre (bez poslednje koja najcesce prestavlja checksum preko Lun-ove formule) predstavljaju jedinstven broj racuna vlasnika PAN-a (kartice) - personal account number
+	< Limit???detaljnije objasnjenje!!!!!!!!!!
+		1) If the Amount, Authorized is greater than or equal to the Reader ####Contactless Transaction Limit####, then the reader shall set the Contactless Application Not Allowed indicator for Visa AIDs to 1.
+Note: It is strongly recommended that the Reader Contactless Transaction Limit Check be disabled.
+		2) If the Amount, Authorized is greater than or equal to the Reader ###CVM Required Limit###, then the reader shall indicate CVM Required (set TTQ byte 2 bit 7 to 1b).
+		3) If the Amount, Authorized is greater than either the Reader ###Contactless Floor Limit### or (if the Reader Contactless Floor Limit is not present) the applicable Terminal Floor Limit (tag '9F1B'), then the reader shall indicate Online Cryptogram Required (set TTQ byte 2 bit 8 to 1b).
+	< DOL (Data Object List) - strana 38 knjige 3
+		> unapred dogovoren standard koji menja TVL formata kako bi se ubrzala razmena podataka. I ti formati se koriste kada kartica treba da trazi neke podatke pa da ne gubi vreme prilikom formiranja komplikovanijih struktura podataka.
+		> A DOL is a concatenated list of entries, with each entry representing a single data element to be included in the constructed field.The format of each entry is a one- or two-byte tag identifying the desired data object, followed by a one-byte length which represents the number of bytes the field shall occupy in the command data.
+		E sada za u svakoj od pojedinih komandi se javlja neka DOL:
+			~ DDOL - INTERNAL AUTHENTICATE
+			~ CDOL - GENERATE APPLICATION CRYPTOGRAM (postoje 1 i 2)
+			~ TDOL - used to generate TC hash value
+			~ PDOL - GET PROCESSING OPTIONS
+	< PSE, DDF, ADF, AEF, AFL, record:
+		> fajl sistem kartice je izgrajden od ADF (Application Definition Files) blokova. Broj ADF-ova predstavlja broj aplikacija na kartici. Referencira se AID-om (SELECT komandom) i tada terminal vraca FCI.
+		> ADF sadrzi AFL (Application File Locator) - lista svih AEF-ova koje ADF sadrzi kao i AEF-ove.
+			ADF = AFL + AEFs (max 30)
+		> AEF (Application Elementary File) sadrzi podatke aplikacije - AEF predstavlja podblok ADF (ako je ADF poddirektorijum DDF/PSE-a onda je AEF file)
+		> a u okviru AEF-a kome se pristupa pomocu SFI (Short File Identifier-a) se nalaze recordi (???nisam siguran koliko moze da ih ima)
+		> e sada PSE je vrsta DDF-a - 1PAY.SYS.DDF01 (sa ovim imenom moze da mu se pristupi) - jednostavno se DDF-u i PSE-u pristupa kao i ADF-u - preko jedinstvenog AID-a. Ali odgovor na SELECT komandu je drugaciji ako se selektuje PSE ili DDF ili ADF (knjiga 1 strana 129)
+		> inace PSE predstavlja sistem za grupisanje platnih aplikacija (tj ako se na kartici nalaze i neke ne platne aplikacije onda termianl moze znati da su platne u ovom folder-u).
+		>MNOGO BITNO:ZNACI SA SELEKT SE MOGU SELEKTOVATI I PSE I DDF I ADF SA ODGOVARAJUCIM AID-JEM (ILI IMENOM U SLUCAJU PSE-A) A ODGOVOR NA SVAKU OD TIH SELECT KOMANDI JE SPECIFICAN I DAT NA STRANI 129 1. EMV KNJIGE!!!!!!!!!!!!
+		> a sami rekordi se sastoje od podataka u TLV (Tag Length Value) formatu!!!!!!!!!
+		> referenca za ADF je AID a za AEF je SFI!!!!!!!!a u okviru AEF-a postoje rekordi (recordi)!!!!!!!!!!!!!
+		> AFL se dobija u odgovoru na GPO i to iza AIP (Application Interchange Profile) a sam format AFL je niz pojedinih sekcija AEF-a i to napr:
+		08 02 02 00
+		0000 1000 0000 0010 0000 00010 0000 0000
+		Citanje pocinje sa leva:
+		prvih 5 bita predstavlja SFI tj referenca na odredjeni AEF
+		drugi bajt (sa leva) predstavlja prvi rekord iz ovog AEF-a koji se uzima
+		treci bajt (sa leva) predstavlja poslednji rekord koji se uzima
+		i poslednju (cetvrti bajt sa leva) govori koliko se rekorda koristi u offline data authentication-ji pocev od prvog rekorda koji se ovde cita
+	< AIP - Application Interchange Profile
+		> sadrzi 2 bajt od kojih je desni rezervisan za kasniju upotrebu (RFU - reserved for future use)
+		>ako su biti oznaceno od b8 ka b1 od krajnje levog ka krajne desnom onda biti u prvom (bajtu sa leva) u AIP-u nose sledece inforamcije:
+		b8 - RFU
+		b7 - SDA supported
+		b6 - DDA supported
+		b5 - Cardholder verification is supported
+		b4 - Terminal risk management is to be performed
+		b3 - Issuer authentication is supported  (ako je ovaj bit setovan onda se Issuer Authentication odradjuje preko EXTERNAL AUTHENTICATION)
+		b2 - RFU
+		b1 - CDA supported
+	< data authentication:
+		> pre ulaska u autentikaciju pored same definicije autentikacije dacu i nekoliko potrebnih definicija vezanih za kriptografiju:
+		~ tacna je ova donja prica - u annex-u A2 knjige 2 je data potvrad ovog algoritma!!!!!!!!!!!!!!!!!
+		~ In cryptography, a public key certificate (also known as a digital certificate or identity certificate) is an electronic document used to prove ownership of a public key. The certificate includes information about the key, information about its owner's identity, and the digital signature of an entity that has verified the certificate's contents are correct. If the signature is valid, and the person examining the certificate trusts the signer, then they know they can use that key to communicate with its owner.
+		~ Certification Authority (CA) je jednostavno institucija kojoj i Issuer i Acquier-er veruju! Na POS (acquier-ersku stranu) smestaju CA Public key a na Issuer-skoj strani (na kartici) smestaju Private i Public kljuc (koji su dodeljeni konkretoj aplikaciji Issuer-a). E sada zasta sluzi ovaj CA Public Key na POS-u? Potreban je da bi se verovalo onom public-private paru na kartici! Private kljucem se na kartici potpisuje neki podatak. Da bi se taj poptis verifikovao tj da bi POS mogao da se uveri da je tacan potreban je odgovarajuci public kljuc koji je takodje na kartici. Da bi se verovalo public kljucu koji je na kartici on je potpisan private kljucem koji je par sa public kljucem koji je na POS terminalu!!!!!!!!!!!!Ukratko, na osnovu public kljuca (koji je generisao CA) POS veruje public kljucu koji prima sa POS-a a onda na osnovu toga public kljuca (koji je dobio sa kartice) verifikuje i proverava (autenticnost) odredjenog podatka koji je Issuer potpisao private kljucem (koji je par onog public kljuca kome POS veruje na osnovu public kljuca kome veruje). Zakljucak je da i Issuer i Acquier-er moraju da veruju istom CA-au!!!!!!!!!!!!!!!!!!!!!smatracemo ovo elemntarnim algoritmom!
+		~ CA generise sertifikat za neki kljuc tako sto ga potpise svojim private kljucem i onda svako ko verujem odgovarajucem public kljucu CA-a veruje sertifikatu (kljucu) koji je CA potpisao. Naravno, sertifikat je jednostavno kljuc plus jos podaci koji idu uz kljuc (datum do kada vazi, za koji algoritam se koristi, kolika je duzina kljuca).
+		~ E sada sta znaci ovo verujem i kako se dolazi do toga... Trenutno ne mogu da ulazim u dublju analizu ali cini mi se da algoritam funkcinise na sledeci nacin - od podataka koje treba da se potpisu se izracuna hash a onda se tako dobijeni hash potpise private kljucem CA-a. Svako ko veruje CA-au tj njegovom kljucu moze daizracuna isti hash i da dekriptuje dobijeni hash i da uporedi tako dobijene vrednosti. Ako su jednake onda je primljeni podatak (dokument, kljuc ili sta vec ) netaknut. Hash je jedinstven skup podataka (niz bajtova) koji se dobija iz odredjenog dokumenta (niza bajtova) a njegova karakteristika je da se za svaki dokument dobija jedinstven hash. Pored toga druga bitna karakteristia je da je nemoguce odraditi inverzni proces - da se iz hash-a izvuce dokument (niz bajtova) za koji je hash izracunat!
+		~ Jos jedna napomena!!!!!!!!!!da li se kriptuje public ili private kljucem???odnosno da li na osnovu toga da znam da li je kljuc public ili private mogu da kazem da li se tim kljucme kriptuje ili dekriptuje???zasto???kada se kriptuje neki podatak server drzi na sajtu public kljuc, ja kriptujem podatak i posaljem server u a server dekriptuje private kljucem. a kada se radi o digitalnom potpisu server deli public kljuc a kriptuje private kljucem. kada dobijem dokument racunam hash i onda dekriptujem potpis (hash kriptovan private kljucem) i uporedjum moj hash sa dekriptovanim i na osnovu toga utvrdjujem da li je dokument valiadan.ukratko podatak je moguce kriptovati private kljucem i dekriptovati public i kriptovati public i dekritpovati private kljcuem!jednostavno se kljuc za koji svako zna koristi ime publi a za tajni private!
+		~ PITANJE?????????????KADA SE GENERISE PAR PUBLIC/PRIVATE LKJUCEVA, DA LI SE ZNA KOJIM KLJUCEM SE KRIPTUJE KOJIM SE DEKRIPTUJE ILI BILO KOJI KLJUC MOZE DA KRIPTUJE A DRUGI DA DEKRITPUJE????(KOD SIMETRICNOG KRIPTOVANJA JE TAKO)
+		> authenticaiton - provision of assurance of the claimed identity of entity or of data origin.
+		> Offline data authentication is required to support offline transactions but is optional in cards that support only online transactions.
+		> VELIKA NAPOMENA!!!!!!!!!!!!!!!!!!OVO JE SAMO AUTENTIKACIJA TJ GARANCIJA DA JE ONO STO SAM POSLAO (STO JE KARTICA POSLALA) KA POS TERMINALU NEIZMENJENO!!!!!!!!!!!!!!ALI SVAKO MOZE DA PRISLUSKUJE KOMUNIKACIJU!!!!!!!!!!!!!!!!I DA VIDI STA KARTICA I TERMINAL RAZMENJUJU ALI NE MOZE DA IZMENI!!!!!!!!!!!
+		> treba imati u vidu da je kod SDA moguce poturiti podatke koje kartica salje jer su uvek isti!!!!!!!!!!!
+		> SDA
+			This detects unauthorised alteration of data after personalisation. The only form of offline static data authentication defined is Static Data Authentication (SDA) that verifies the data identified by the Application File Locator (AFL) and by the optional Static Data Authentication Tag List.
+			SDA requires the existence of a certification authority, which is a highly secure cryptographic facility that ‘signs’ the issuer’s public keys.
+			Kod SDA se koristi elementarni algoritam sa tim da se (staticki) odredjeni skup podataka kriptuje private kljucem sa kartice - a onda se na POS-u taj skup dekriptuje odgovarajucim public kljucem koji je prevucen sa kartice i proverava se da li su podaci tacni. 
+			ICCs that support SDA shall contain the data elements:
+				~ Certification Authority Public Key Index - Contains a binary number that indicates which of the application’s certification authority public keys and its associated algorithm that reside in the terminal is to be used with this ICC.
+				~ Issuer Public Key Certificate - Provided by the appropriate certification authority to the card issuer. When the terminal verifies this data element, it authenticates the Issuer Public Key plus additional data as described in section 5.3.
+				~ Issuer Public Key Certificate - Provided by the appropriate certification authority to the card issuer. When the terminal verifies this data element, it authenticates the Issuer Public Key plus additional data as described in section 5.3.
+				~ Signed Static Application Data - Generated by the issuer using the private key that corresponds to the public key authenticated in the Issuer Public Key Certificate. It is a digital signature covering critical ICC-resident static data elements, as described in section 5.4.
+				~ Issuer Public Key Remainder - The presence of this data element in the ICC is conditional. See section 5.1 for further explanation.
+				~ Issuer Public Key Exponent - Provided by the issuer. See section 5.1 for further explanation.
+			Postoji i spisak elemenata koji ulaze u static data za potpis. Ne mogu i te podatke gurati ovde!
+		> DDA
+			Kod DDA se pored static application data potpisuje i public kljuc koji je jedinstven za karticu. Onda se i pojedinacni podaci mogu potpisivati sa private kljucem jedinstvenim za karticu.???valjda je ovako???
+			Ako se koristi DDA mora postojati komanda INTERNAL AUTHENTICATION koja salje podatke koji takodje ulaze u autentikaciju!
+			Ukratko CDA je identican postupak kao DDA sa tom razlikom da u podatke koji se proveravaju ulazi i cryptogram pod uslovom da nije AAC (odbjianje transakcije). Pored toga CDA mora da se vrsu u trenutku da kada se sa terminala posalje GENERATE AC!
+			Two forms of offline dynamic data authentication exist:
+				• Dynamic Data Authentication (DDA) executed before card action analysis,
+				where the ICC generates a digital signature on ICC-resident/generated data
+				identified by the ICC Dynamic Data and data received from the terminal
+				identified by the Dynamic Data Authentication Data Object List (DDOL).
+				• Combined Dynamic Data Authentication/Application Cryptogram Generation
+				(CDA) executed at issuance of the first and second GENERATE AC
+				commands. In the case of a Transaction Certificate (TC) or Authorisation
+				Request Cryptogram (ARQC), the ICC generates a digital signature on
+				ICC-resident/generated data identified by the ICC Dynamic Data, which
+				contains the TC or ARQC, and an Unpredictable Number generated by the
+				terminal and identified by Card Risk Management Data Object List 1
+				(CDOL1) or Card Risk Management Data Object List 2 (CDOL2).
+					CDA consists of a dynamic signature generated by the ICC (similar to DDA but
+					including Application Cryptogram (AC) generation) followed by verification of
+					the signature by the terminal.
+					In this section it is assumed that:
+					• Both the ICC and the terminal support CDA.
+					• The cryptogram to be requested is not an Application Authentication
+					Cryptogram (AAC).
+???ostaje jos da se odradi GET AC i da se predje onaj deo EMV-ja koji ja imam odstampan i ukoricen i na kraju definitivno proci kroz nas XML i shvatiti u kom trenutku i za sta se koristi koji podatak???i onda je EM prica potpuno zaokruzena!!!!!!!!!!!!!!!!!
