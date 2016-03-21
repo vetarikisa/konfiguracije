@@ -109,3 +109,89 @@ if any error occurs and -q was not given, the exit status is 2.
 Report bugs to: bug-grep@gnu.org
 GNU Grep home page: <http://www.gnu.org/software/grep/>
 General help using GNU software: <http://www.gnu.org/gethelp/>
+- tmux (inace sam ovaj program poceo da koristim na cygwin-u ali nominalno se on koristi na linux platform-i pa cu ga smestiti ovde):
+	> osnovna ideja je da se sa jednom prefix komandom, koja je nominalno C-b (od sada pa nadalje PREFIX jer se moze promeniti u config fajlu sto cu ja i uraditi - za sada sam stavio CTRL-a.razmislicu jos, sta mi ne smeta u Vim-u...najpre nesto sa ALT-om???), salju komande tmux-u umesto bilo kog alata/prorgama koji je pokrenut u tmux-u (kao napr vim)
+		< naravno ako sam van tmux-a (kada kreiram sesiju ili izlistavam sesije) mogu da zadajem komande tmux-u preko komandne linije tmx ...
+		< ???sta da uzmem za prefix???
+	> ono sto sigurno zelim da znam je kako da napravim script-ove koji mi postavljaju odgovarajuce razvnojno okruzenje (za posao, za kucu, trenutno...)
+	> najjednosatvnije (najgluplje) startovanje tmux-a je 
+	$ tmux 
+	a izlaz je 
+	$ exit
+	> ali ideja je da se koristi vise terminala sa vise programa tako da se svakom od pojedinih entiteta koji se koriste u radu mora dodeliti jedinstveni ID
+!	> osnovni building block-ovi sa kojima tmux radi su:
+		< session
+				~ ime sesije je pogodno ako cak hocu da sklonim trenutno tmux sesiju tj da se deattachd!naknadno se opet attached na sesiju!OSNOVNA IDEJA SESIEJ I JESTE DA SE MOZE POKRENUTI NEKI POSAO I OSTAVITI SE DA RADI (ILI NE) I ONDA RADITI NESTO DRUGO I ONDA SE NAKNADO OPET NAKACITI NA SESIJU!!!!
+				~ e sada kada hocu da kreiram novu sesiju (sa tmuz se kreira jedna bezimena sesija):
+				$ tmux new-session -s prva _sesija
+				ili
+				$ tmux new -s prva_sesija
+				~ ako hocu da izadjem iz trenutne sesije koristim PREFIX+d
+				~ ako hocu da se vratim:
+				$ tmux attach -t ime_sesije
+				~ sesija moze da se ubije iz same sesije sa exit a moze i spolja sa komandne linije:
+				$ tmux kill-session -t ime_sesije
+		< window
+			~ window je ekvivalentan tab-ovim u ostalim prorgamima
+			~ ako hocu da kreiram sesiju sa window-om. probao sam, nemoguce je kreirati sesiju sa vise window-a odjednom (ili se kreira na neki poseban nacin - ja sam samo naveo jos jednom -n ime)
+			$ tmux new -s prva_sesija -n editor
+		< pane
+			~ a window se dele na pane-ove (prozori u ostalim programima)
+	> inace u dnu prozora na sredini su mi navedeni window-i a levo us date koordinate prvo je window a drugo pane!
+	> kada kreiram sesiju i kada se deattache-ujem od nje mogu da joj saljem komande!!!!!!!podeli prozor, napravi pane itd!!!!!!!!!!ovakva mogucnost se koristi za kreiranje script-ova!!!!!!!
+	> potrebno je da odaberem fodler gde cu da smestam scriptove.neka za sada bude u konfoguracijama pa cu ga kasnije prebaciti da bude dostupan tmux-u.
+	> u scriptovi folderu u bash-u cu da ubacim script za pokretanje projekta u tmux-u. sva uputstva ce biti u samom script-u
+	> odradio sam pokretanje scrip-a!!!!!!!!!jdenostavno se script pozove kao bilo koji drugi script!bash, puthon ili bathc!
+	> smesticu scriptove u tmux_projects
+	> moguce je prilagoditi cnofig fajl odredjenom scrip-u tj projektu!!!!!!!!!
+	> jednostano napravim napr app.config script. kao prvu komadu uvedem napr moj standardni config fajl i zatim sve komande koje jos zelim i onda pozovem tu novu sesiju sa:
+	$ tmux -f app.config atach
+	> koristi se attach zato sto tmux kao po defalut-u kreira jednu sesiju i onda se sa attach kacim za vec postojecu sesju...nije mi bas jasno ali se u svakom slucaju ovako pokrece projekat sa specijalnim config fajlom!!!!!!!!!!!!!
+	> e sada postoji i alat koji omogucuje da se lakse barata sa konfiguracijama!kasnije cu koristiti ovaj alat - jednostavno mi trenutno nije problem da nasetujem moje ravojno okruzenje na ovaj duzi nacin...a i ovaj alatje u Ruby-ju pa bi trebalo i sa njim da se bakcem ako nije ok instaliran...videcu kasnije ako budem pravio opet nove konfiguracije pa cu poceti daga koristim
+	> primer konfiguracije projekta preko tmuxinatora:
+	scripting/default.yaml
+	project_name: Tmuxinator
+	project_root: ~/code/rails_project
+	socket_name: foo # Not needed. Remove to use default socket
+	rvm: 1.9.2@rails_project
+	pre: sudo /etc/rc.d/mysqld start
+	tabs:
+		- editor:
+			layout: main-vertical
+			panes:
+				- vim
+				- #empty, will just run plain bash
+				- top
+		- shell: git pull
+		- database: rails db
+		- server: rails s
+		- logs: tail -f logs/development.log
+		- console: rails c
+		- capistrano:
+		- server: ssh me@myhost
+	> paziti na uvlacenja!!!!!!!!ona su deo standarda yml fajla
+	> krenucu sa 4 poglavljem (mislim da cu 5o preskociti)
+	> savrseno!!!!!!!!!!!!!!!!!!kada se pritisne prefix+[ onda se ulazi u vi mod i mogu da se kerecem preko celog ekrana sa hjkl (naravno i ovo jeposebno mapirano u config=u)
+	> u visual mode se trenutno ulazi (tj nominalno je) SPACE, sa ENTER 
+	> komande koje bih mogao da zapamtim su (u radu sa baffer-om koji dobijam kopiranjem):
+		capture-pane - u baffer smesta ceo pane
+		list-buffers - izlistava ceo stack buffer-a jer se inace svi buffer-i pamte
+		show-buffer - prikazuje buffer
+		save-buffer - snima buffer u fajl koji se navodi naknadno
+		choose-buffer - daje opciju da se izabere buffer koji moze da se ubaci u sam prozor
+		sve ove komande mogu da se unesu sa console tmux pa komanda i sa komande linije samog tmux-a jednostavno se koriste bez tmux-a
+		svi ovi baferi se dele medju pokrenutim sesijama!!!!!
+		mada nisam siguran u kojoj situaciji se koristi poziv ovih bafera sa tmux komandom???koristi se u okviru same sesije!!!!!!!!!cini mi se da je logicnije da koristim opciju preko komandne linije samog tmux-a!!!!!!!!!!!!!!!!!!!!
+	> i definitivno cu dodati mapiranja kako bi rad s modovima kao sto je naprimer dato u knjizi:
+		unbind [
+		bind j copy-mode
+		unbind p
+		bind p paste-buffer
+		bind -t vi-copy 'v' begin-selection
+		bind -t vi-copy 'y' copy-selection
+		DO JAJAAAAAAAAAAAAAAAAAAAAAAA!!!!!!!!!!!!!!!!!savrseno!!!!!!!!!!!!!!!!!!!!!!
+	> ostale su mi sekcije 4.3 i 4.4 i iz 4og poglavlja!!!!!!!!!!
+	> ostaju mi jos 5o i 6o poglavlje!kapiram da mi 5o i ne treba trenutno ali cu procitati pocetak da vidim o cemu se radi!
+	> mislim da cu ipak odraditi i 6u
+	> video sam jednu zanimljivu komandu PREFIX+! - od pane kreira window!
+	

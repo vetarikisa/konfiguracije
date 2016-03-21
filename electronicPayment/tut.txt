@@ -1,3 +1,4 @@
+???ostaje jos da se odradi GET AC i da se predje onaj deo EMV-ja koji ja imam odstampan i ukoricen i na kraju definitivno proci kroz nas XML i shvatiti u kom trenutku i za sta se koristi koji podatak???i onda je EM prica potpuno zaokruzena!!!!!!!!!!!!!!!!!
 - EMV transaction flow
 	> najgrublje opisan tok
 		< kartica salje SELECT FILE komande
@@ -37,6 +38,11 @@
 				1) CVM limit check
 				2) floor limit check
 				3) contactless limit check
+                -Postoje tri floor limit-a contactless-a:
+                    * najnizi - da li ide offline ili online ()
+                    * srednji - da li se koristi neki vid autentikacije korisnika (potpis ili online pin)(CVM contactless floor limit)
+                    * najvisi - da li transakcija moze ili ne da se vrsi kao contactless (contactless transaction floor limit)
+                    * napomena: obicno idu ovim redosledom po visini; svaki ima svoje ime... 
 			~ random transaction selection
 			~ velocity checking
 		< kartica moze da primi i da odgovori sa jednim od sledecih AC (Application Cryptogram-a): - e sada kako su kreirane ove skracenice da ga jebem...???
@@ -70,6 +76,7 @@
 			Odgovor na SELECT je FCI template 6F u okviru koga se nalazi FCI propietary template A5. FCI - File Control Information - dobija terminal kad selektuje aplikaciju preko AID-a!
 			Pored A5 taga koji je obavezan dobija se jos jedan obavezan tag:
 				84 - DF Name (u sustini to je AID na osnovu koga sam i referencirao samu aplikaciju)
+				A5 - FCI Proprietary Template 
 			E sada...sam sadrzaj A5 taga zavisi da li selektujem(o) PSE, DDF ili ADF. Kada saljem AID odgovara se sa scenariom za ADF ( ADF se referencira AID-om!!!!!!!!)
 			Tagovi koji se dobijaju kao odgovor su (sve su opcioni):
 				50 - Application label
@@ -251,7 +258,7 @@ Note: It is strongly recommended that the Reader Contactless Transaction Limit C
 			ADF = AFL + AEFs (max 30)
 		> AEF (Application Elementary File) sadrzi podatke aplikacije - AEF predstavlja podblok ADF (ako je ADF poddirektorijum DDF/PSE-a onda je AEF file)
 		> a u okviru AEF-a kome se pristupa pomocu SFI (Short File Identifier-a) se nalaze recordi (???nisam siguran koliko moze da ih ima)
-		> e sada PSE je vrsta DDF-a - 1PAY.SYS.DDF01 (sa ovim imenom moze da mu se pristupi) - jednostavno se DDF-u i PSE-u pristupa kao i ADF-u - preko jedinstvenog AID-a. Ali odgovor na SELECT komandu je drugaciji ako se selektuje PSE ili DDF ili ADF (knjiga 1 strana 129)
+		> e sada PSE je vrsta DDF-a - 1PAY.SYS.DDF01 (sa ovim imenom moze da mu se pristupi) - jednostavno se DDF-u (Directory Definition File) i PSE-u pristupa kao i ADF-u - preko jedinstvenog AID-a. Ali odgovor na SELECT komandu je drugaciji ako se selektuje PSE ili DDF ili ADF (knjiga 1 strana 129)
 		> inace PSE predstavlja sistem za grupisanje platnih aplikacija (tj ako se na kartici nalaze i neke ne platne aplikacije onda termianl moze znati da su platne u ovom folder-u).
 		>MNOGO BITNO:ZNACI SA SELEKT SE MOGU SELEKTOVATI I PSE I DDF I ADF SA ODGOVARAJUCIM AID-JEM (ILI IMENOM U SLUCAJU PSE-A) A ODGOVOR NA SVAKU OD TIH SELECT KOMANDI JE SPECIFICAN I DAT NA STRANI 129 1. EMV KNJIGE!!!!!!!!!!!!
 		> a sami rekordi se sastoje od podataka u TLV (Tag Length Value) formatu!!!!!!!!!
@@ -324,4 +331,95 @@ Note: It is strongly recommended that the Reader Contactless Transaction Limit C
 					• Both the ICC and the terminal support CDA.
 					• The cryptogram to be requested is not an Application Authentication
 					Cryptogram (AAC).
-???ostaje jos da se odradi GET AC i da se predje onaj deo EMV-ja koji ja imam odstampan i ukoricen i na kraju definitivno proci kroz nas XML i shvatiti u kom trenutku i za sta se koristi koji podatak???i onda je EM prica potpuno zaokruzena!!!!!!!!!!!!!!!!!
+- sredjivanje svega sto je sasa pavlovic objasnjavao:
+- kriptografija:
+        > In cryptography, a PKI is an arrangement that binds public keys with respective user identities by means of a certificate authority (CA).  A CA issues digital certificates that contain a public key and the identity of the owner. The matching private key is not made available publicly, but kept secret by the end user who generated the key pair. The certificate is also a confirmation or validation by the CA that the public key contained in the certificate belongs to the person, organization, server or other entity noted in the certificate. A CA's obligation in such schemes is to verify an applicant's credentials, so that users and relying parties can trust the information in the CA's certificates. CAs use a variety of standards and tests to do so. In essence, the certificate authority is responsible for saying "yes, this person is who they say they are, and we, the CA, certify that".If the user trusts the CA and can verify the CA's signature, then (s)he can also assume that a certain public key does indeed belong to whoever is identified in the certificate.
+        > Public key cryptography is a cryptographic technique that enables entities to securely communicate on an insecure public network, and reliably verify the identity of an entity via digital signatures.  A public key infrastructure (PKI) is a system for the creation, storage, and distribution of digital certificates which are used to verify that a particular public key belongs to a certain entity. The PKI creates digital certificates which map public keys to entities, securely stores these certificates in a central repository and revokes them if needed.  
+        A PKI consists of (pored CA ne znam ko su i sta rade ostale institucije ali neka za sada ceo sistem opisan ovde):
+        A certificate authority (CA) that stores, issues and signs the digital certificates
+        A registration authority which verifies the identity of entities requesting their digital certificates to be stored at the CA
+        A central directory—i.e., a secure location in which to store and index keys
+        A certificate management system[clarification needed]
+        A certificate policy
+        > There are two main uses for public-key cryptography:
+            Public-key encryption, in which a message is encrypted with a recipient's public key. The message cannot be decrypted by anyone who does not possess the matching private key, who is thus presumed to be the owner of that key and the person associated with the public key. This is used in an attempt to ensure confidentiality.
+            Digital signatures, in which a message is signed with the sender's private key and can be verified by anyone who has access to the sender's public key. This verification proves that the sender had access to the private key, and therefore is likely to be the person associated with the public key. This also ensures that the message has not been tampered with, as any manipulation of the message will result in changes to the encoded message digest, which otherwise remains unchanged between the sender and receiver.
+            An analogy to public-key encryption is that of a locked mail box with a mail slot. The mail slot is exposed and accessible to the public – its location (the street address) is, in essence, the public key. Anyone knowing the street address can go to the door and drop a written message through the slot. However, only the person who possesses the key can open the mailbox and read the message.
+            An analogy for digital signatures is the sealing of an envelope with a personal wax seal. The message can be opened by anyone, but the presence of the unique seal authenticates the sender.
+            A central problem with the use of public-key cryptography is confidence/proof that a particular public key is authentic, in that it is correct and belongs to the person or entity claimed, and has not been tampered with or replaced by a malicious third party. The usual approach to this problem is to use a public-key infrastructure (PKI), in which one or more third parties – known as certificate authorities – certify ownership of key pairs. PGP, in addition to being a certificate authority structure, has used a scheme generally called the "web of trust", which decentralizes such authentication of public keys by a central mechanism, and substitutes individual endorsements of the link between user and public key. To date, no fully satisfactory solution to the "public key authentication problem" has been found.
+            Ukratko objasnjenje drugog algoritma web of trust (takodje bi moglo detaljnije da se objasnig):
+            The simplest way to explain it is a bit like "6 degrees of separation". The idea with a web of trust is that you verify someone's identity and decide to trust them to trust people for you. So if I verify that Bob's certificate is actually for Bob and I verify that Charlie's certificate is from Charlie, Bob and Charlie can both verify that Dan is in fact Dan. Now, when Dan want's to talk to me, he can provide his certificate which is trusted by both Bob and Charlie. Since I trust Bob and Charlie, I figure that it is probably a good chance Dan is actually Dan. This works since I expect that Bob and Charlie weren't both working together and Dan had to have convinced them both that he was ok. A web of trust is such a network of people who have verified each other's certificates and thus you can trust unknown certificates based on how many people you have verified that have established a relationship with them.
+        > zahtevi koji se postavljaju pred kriptografije:
+                In addition to providing confidentiality, cryptography is often asked to do other jobs:
+                — Authentication. It should be possible for the receiver of a message to ascertain its origin;
+                an intruder should not be able to masquerade as someone else.
+                — Integrity. It should be possible for the receiver of a message to verify that it has not been
+                modified in transit; an intruder should not be able to substitute a false message for a legitimate
+                one.
+                — Nonrepudiation. A sender should not be able to falsely deny later that he sent a message.
+                - naravno ovde se kao glavno pitanje namece razlika izmedju authenticaiton i nonrepudiation???odrradicu i to kasnije ali evo ukratko objasnjenja:
+                        > Authentication and non-repudiation are two different sorts of concepts. Authentication is a technical concept: e.g., it can be solved through cryptography. Non-repudiation is a legal concept: e.g., it can only be solved through legal and social processes (possibly aided by technology). Some people have been taught that non-repudiation can be provided through crypto-mathematics alone. However, that is not correct.
+- Tumacenje 3D-Secure-a:
+	* e-commerc -> kupovina preko interneta tj kupovina kada merchat i njegova kartica nisu na istoj fizickoj lokaciji kao POS merchat-a - card not-present transaction
+	* dodatni entiteti u e-commercu (3D-Secure): Payment Gateway, Directory Server(Service) i ACS (Access Control Server)
+	* Payment Gateway - na njega se prosledjuje korisnik kada zeli da unese podatke svoje kartice (pre toga se sa sajta merchant-a posalje ID kupovine sa koji se, mozda implicitno, prijavljuje cardholder na sajt Payment Gateawy-a) - firma koja pruza uslugu acquireer-u (ono sto mi radimo za Italijane)
+	* Odatle se salje zahtev preko (Visa-inog Directory Server-a, koji izgleda switch-uje ove zahteve) ka ACS koji se nalazi u banci (issuer-u) da li je taj korisnik uopste prijavljen ka 3D Secure sistem - Visa/MasterCard server koji kaze u kojoj se banci taj cardholder nalazi. pre toga se salje VEReq i VERes da se vidi da li uopste postoji taj koristnik u basi ACS-a gde mora cardholder licno sa karticom da ode da odradi eenrollment
+	* ranijim odlaskom u banku se korisnik smesta u ACS (i dodeljuje mu se password za koriscenje 3D Secure-a)
+	* posto se utvrdi da taj korisnik postoji u bazi podataka (na sajtu PG-a) mu se trazi password koji se prosledjuje ACS-u na autentikaciju 
+	* kada se korisnik autentikuje sama transakcija se (preko acquire-ovog procesora) salje issuer-u na klasicnu autorizaciju cime se transakcija zavrsava (uspesno ili ne)
+	* sva ova zavrzlama sluzi zbog sigurnijeg obavaljanja card not-present transakcija. Issuer preuzima celu odgovornost za transakciju tj issuer snosi odgovornost pri zloupotrebi (za razliku od obicnog scenarija, bez 3D Secure-a, kada zloupotrebu placa merchant)
+	* A gateway refers to the software that transports the credit card information from your customers (either collected on your website or a virtual terminal) to your credit card processor.
+    If you sell online, you will definitely need a gateway, as well as a credit card processor. The gateway is what sits between your shopping cart software and your credit card processor. 
+    * ako hocu davidim i sliku celog objasnjenja samo kucati na netu 3D secure i traziti slike, uz svaku sliku ide i objasnjenje.
+    * a ranije se samo cardholder autentikovao Visa-inim CVV-om ili MasterCard-ovim CVC-om! sada se korisnik prvo mora autentikovati svojoj banci pa tek onda moze da se ide regularnim kanalima i da se autorizuje transakcija.
+    * In a nutshell, 3-D Secure is card authentication anti-fraud protocol developed by Visa and MasterCard to verify a shopper's identity during online shopping. Based on this new standard, Visa and MasterCard have rolled out their authentication programmes Verified by Visa (VbV) and MasterCard SecureCode (MCSC).As the name suggests the protocol interacts between Three Domains (3-D) providing secure communication between all participating parties: issuer domain, interoperability domain, acquirer domain.In response to challenges of online fraud, Visa and MasterCard each introduced their own 3-D-based security programme. Apart from some smaller differences in terminology and the succession of popup or inline windows for enrollment and authentication, Visa  and MasterCard offer the same online security. As both programmes operate in the same way, the Wirecard 3-D Secure (payment gateway) solution supports MasterCard SecureCode (including Maestro card) and Verified by Visa interchangeably.e-commerce transactions are 15-20 times more likely to be disputed and charged back than transactions undertaken face to face.  Compared to VbV, MCSC uses different transaction status flags and ECI values (electronic commerce indicator) in the payment authentication request and response messages (PARes and PAReq) and has different chargeback reason codes.VbV and MCSC take over where common authentication by Card Verification Value (CVV) or MasterCard's Card Verification Code (CVC) leave off. Only after the shopper is authenticated, the card issuer authorizes the online purchase, which means that the issuer confirms that the referenced bank account exists and that the cardholder has sufficient funds in the account to cover the purchase.When a shopper makes a transaction, the Wirecard gateway contacts the global directory in the interoperability domain to determine the web link (URL) to the bank which issued the card used to makethe purchase.Please note that the process of enrollment takes place between the cardholder and the card issuing bank and neither involves merchant nor payment card association (Visa or MasterCard) directly. During enrollment In the case of a Visa smart card, the verification process also establishesthat the cardholder has physical possession of the card at the time of enrollment???. Before the 3-D Secure software tries to authenticate a cardholder, it checks if thecardholder is enrolled. This process is known as Enrollment Check and is based on a sequence of interconnected verification requests and responses, called Verify Enrollment Request (VEReq) and Verify Enrollment Response (VERes).For the merchant the attempted authentication means that he is protected against certain chargebacks. According to Visa and MasterCard sources, online retailers participating in 3-D Secure authentication can reduce financial losses through online fraud by 60% - 70%. According to MasterCard, approximately 70% of all chargebacks are result from the cardholder denying responsibility for the transaction and the acquirer lacking the evidence of the cardholder's authentication.
+- A chargeback (also known as a reversal) is a form of customer protection provided by the issuing banks, which allows cardholders to file a complaint regarding fraudulent transactions on their statement. Once the cardholder files a dispute, the issuing bank makes an investigation into the complaint. Once the transaction is proven to be indeed fraudulent, the bank will refund the original value to the cardholder. From the merchant's point of view, if you do not prove the transaction to be legitimate, the bank will take back the entire value of the transaction from your account, along with an additional fee. This chargeback fee will range from $0 to $100, depending on the merchant bank sponsoring your account. Fraudulent transactions - the most common cause for chargeback is fraudulent transactions. This happens when the credit card is used without the authorization and consent of the cardholder. In cases like these, the merchant is held solely responsible.With an Internet or Mail Order charge all a customer needs to say is: 'I do not remember ordering anything from this merchant'. This is a dispute that is filed when the customer receives their bill and sees the ('unknown'-) charge on the statement. This is called a "Retrieval Request". In the case of Visa, merchants are required to keep sales drafts for a minimum of 3 years.  For MasterCard, they generally require storage for only 180 days. These requests usually accompany information such as the cardholder's account number, the date of the transaction, the reference number and the sale amount. Retrieval requests are very crucial. When it is requested, you are expected to reply to it with the required documents within the specified time given.  Most chargebacks is not fraud, identity theft, processing errors or the like. What causes most chargebacks is what is referred to as "friendly fraud."From a merchant's point of view, there is nothing friendly or pleasing about friendly fraud. Friendly fraud is an industry term which refers to a fraud which results from a customer making a purchase with his or her own credit card, receiving the merchandise and then filing for a chargeback. This involves dishonest people who would like to keep the merchandise without actually paying for it. Truth be told, friendly fraud is one of the most difficult type of chargebacks to process.
+- Visa/MasterCard
+- visa u evropi koristi SMS sistem a MasterCard u americi koristi sms sistem	
+	* kada kazem sms mislim na Single Message System i on se odvija na sledeci nacin
+		> kad se obavi autorizacija (POS/ATM -> procesor acquier-a -> Visa/MasterCard -> procesor issuer-a -> moze i ne mora da ide do banke zavisi gde se vrsi autorizacija)
+		> odgovor autorizacije ide nazad i kada dodje do Visa-e/MasterCard-s pored vracanja POS/ATM-u salje se clearing direktno u nacinalnu banku gde su Visa/MasterCard otvorile racune za svakog issuer-a i acquer-a
+		> sam settlement se obavlja kada je settlement zakazan i za dual messageing system-e
+		> i tada se obavlja net settlement (tj bruto settlement - u apsolutnom smislu koliko svaka banka treba da uplati ili primi)
+	* Visa/MasterCard posmatraju samo banke njih ne zanima sam korisnik banke
+	* sta je jos bitno...banki se pristupa preko procesora nije bitno da li se radi autorizacija ili acquaring
+	* settlement Vise i MasterCard-a je u dolaru pa se u odnosu na billing valutu prenosi u odgovarajucu valutu - cini mi se da se ovo radi kada se razlikuju billing i valuta issuer-a?
+- Ceo proces obrade transakciej i rad Visa-e i MasterCard-a:
+	* sam outgoing file (salje ga procesor na ime banke - valjda je to kada se kod DMS-a u clearing-u salju transakcije za taj dan) i incoming file (prima ga banka preko procesora od Visa-e/MasterCard-a - u daljem tekstu VMC;to je valjda stabanka kome terba da isplati) je mnogo pregledniji kod Visa-e i intuitivniji i ostavljeno je dosta prostora za doradu - postoji 9 nivoa koje slog moze da ima - za svaku transakciju je nominalno dodeljen jedan slog
+	* inace u okviru samog outgoing file-a mogu pored transakcija prodaje da budu i ostale transakcije - chargeback, prodaja na rate ili sta vec
+	* velika napomena: da li je kreditna ili debitna kartica to Visa-u i MC ne zanima one naplacuju ceo iznos - a samo klempanje (kreditiranje) obavalja banka
+	* Amex i Diners su zatvoreni sistem a banke su samo njihovi agenti. 
+	* kad a banka zeli da pristupi VMC mrezi prvo moze da dobije Issuing profil - kartice i ATM-ovi
+	* banka dobija BIN (Bank Identification Number) za kartice i za ATM - nju ne zanim nista na nizem nivou - jedinstvena identifikacija ATM-a ili same kartice - potrebni su joj ovi jedinstveni identifikatori zbog rutiranja samih transakcija
+	* tek kada banka pocne da izdaje kartice potrebno je da se obezbedi odredjen uslov kako bi banka mogla da ima svoju POS mrezu i da radi eCommerc tj da otvori i Acquiring profil
+	* sama cifra varira ali radi se o udelu kartica banke na odredjenoj teritoriji napr Intesa mora da ima 15% Visa-inih kartica u Srbiji kako bi Visa htela da joj dozvoli Acquire-ing profil
+	* kada se transakcije obavaljaju ON_US (karticom banke se placa na terminalu same banke) ta transakcija ne interesuje VMC
+	* ali kada se radi OFF_US situacija je drugacija
+	* Visa je jaca u Evropi a MC u Americi. Centrala Visa-e je u Singapuru (dugo vremena je bila u Londonu) a centrala MC je Vaterlo-u.
+	* u zemljama istocne Evrope, Bliskog Istoka i drugih zemlja gde valuta nije bas nesto vazeca napolju uglavnom se Clearing i Settlement (u daljem tekstu C&S) rade u samoj zemlji (u nacionalnoj banci napr). Inace kada god se postane clan VMC u zavisnosti koji profil se otvara Issuer ili Acquiring se dobija settlement racun u odgovarajucoj banci - napr Intesa verovatno ima jedan u Narodnoj banci a drugi u Americi (za settlement sa karticama banaka koje nizu sa teritorije Srbije). VMC na osnovu BIN-ova (kartica banaka) od outgoing file-ova kreira incoming file-ove.
+	* tok same transakcije:
+		> osnovna napomena: tokom same transakcije VMC ne uzima nista - VMC naplacuje po odredjenoj transakciji odredjene kartice. Cifre su fiksne (flet tj nizu procenti), reda velicine na trecu, cetvrtu decimalu
+		> e sada posmatracemo sistem gde je procesor izostavljen - on se posmatra samo kao ruter koji radi u ime banke
+		> ako se provuce kartica i 'naplati' se 1000din
+		> acquirer salje autorizacioni zahtev banci issuer-u preko VMC mreze
+		> e sada kada kazem da ide preko mreze znaci da ide preko onoh glavnih centara. Podaci koji se dalju:
+			< amaunt
+			< PIN blok (postoji standard)
+			< expaire date
+			< BIN
+			< CVV, CVC
+		> kada se obavi autorizacija slede clearing i settlement - settlment je sam prenos sredstava tj racunanje net stanja
+		> acquer banke kreiraju outgoing file-ove i salju ih VMC centrima
+		> VMC na osnovu BIN-ova (kartica banaka) od outgoing file-ova kreira incoming file-ove.
+		> VMC na osnovu incoming file-ova (koje pored toga salje i bankama issuer-ima) vrsi settlement
+		> jos jedna napomena: VMC obardjuju cele iznose, bez obzira da li se radi o kreditnoj ili debitnoj kartici i druga stvar, u okviru outgoing file-a mogu postoji i druge traksakcije napr chargeback
+	* e sada brojke ko kome sta naplacuje:
+		> VMC (u zavisnosti da li zele da forsiraju issuing ili acquiering) menjaju IRF (interchange fee) i njega placa banka acquier banci issuer-u. Ta brojka (je u procentima) trenutno iznosi otprilike 1,1%. Inace sam IRF se formira i od konkretinih parametara: tipa kartice, tipa terminala, regiona gde se obradjuje transakcija...
+		> e sada, banka acquer naplacuje svom trgovcu odredjeni procenat (koji je veci ili jednak IRF) sve preko IRF banka (od onih 1000 din koje su skinute sa racuna trgovca) uzima kao zaradu
+		> treba napomenuti da acquier banka nema nikakav trosak ako je transakcija ON_US
+	* i na kraju sam proces chargeback-a ili dispute-a:
+		> kada vlasnik kartice dodje da se zali svom issuer-u kada issuer kovertuje zahtevu outgoing file VMC ga automatski obradjuje
+		> banka acquier automatski isplacuje bankci issuer-u iznos dispute-a
+		> e sada kada ce novac da dobije sam korisnik kartice zavisi od filozofije same banke issuer-a
+		< naravno bitan je i rok i slovi koje je potrebno da zadovolji sama zalba tj da li ce trgovac banke acquer-a moci da opovrge zalbu i do kada ce to uraditi
+	* bitna je napomena da za svaku transakciju u VMC postoje jasno definisani rokovi do kada moraju da se zavrase napr ako acquiering baka ne posalje u roku od tri dana u okviru outgoing file-a zahtev za naplatu odredjene transakcije issuer banka nije u obavezi da plati - ali su generalno preporuke da se sve ispalte ispostuju

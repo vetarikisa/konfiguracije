@@ -136,3 +136,28 @@ snippet docv
 	/**
 	 * ${1:opis promenljive/polja}
 	 */
+# pomoc prilikom kreiranja tagova - greska ovo je xml snippet
+snippet tag
+	<${1:tag}>{2:value}</${1}>
+	# pomoc prilikom kreiranja tagova - greska ovo je xml snippet
+# snippet-i koji mi ubacuju package u kome se nalazi odredjena class-a.Napr kada prvi put unesem class-u ArrayList potrebno je da napisem ArrayList,pritisnem TAB i onda ce mi se pored unosa te promenljive prikazati i paket u kome se nalazi ArrayList class-a.
+snippet ArrayList
+	ArrayList {1:reference} = new ArrayList();
+	import java.util.ArrayList;
+# a pored snippeta ovog tipa uvescu i najcesce koriscene class-e napr
+snippet al
+	ArrayList {1:reference} = new ArrayList();
+snippet st
+	String {1:reference} = new String();
+snippet br
+	BufferedReader {1:reference} = new BufferedReader();
+snippet fw
+	FileWriter {1:reference} = new FileWrter();
+snippet fr
+	FileReader {1:reference} = new FileReader();
+snippet fl
+	File {1:reference} = new File();
+snippet pt
+	Pattern {1:reference} = new Pattern.compile("{2:pattern}");
+snippet mc
+	Matcher {1:reference} = {2:pattern}.matcher({2:String for matching});

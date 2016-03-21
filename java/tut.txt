@@ -14,6 +14,99 @@
 							you proceed to write the test code itself, either before or concurrently with the implementation code. Next, you run the test itself, and 
 							probably all the other tests in that part of the system, or even the entire system’s tests if that can be done relatively quickly. It’s important 
 							that all the tests pass, not just the new one. You want to avoid any collateral damage as well as any immediate bugs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	> jednostavan test case:
+	- prvo mora da se importuje projekat u kome su class-e koje ce da obave sav rad - o putanjama ne moram da mislim ako radim sa maven-om
+	- bice da ovaj dole kod ipak ne radi jer je isuvise stara knjiga po kojoj sam radio...tj sada kad je noVi framework drugacije je pozivanje....
+	import junit.framework.*;
+	- ime test class je ime classe koja se testira ispred koga ide Test. znaci class-a Largest se testira sa TestLargest
+	public class TestLargest extends TestCase {
+	- ovaj deo za sada ostaviti kako jeste
+		public TestLargest(String name) {
+			super(name);
+		}
+	- sama metoda za tesrieanje!svaka metoda koja pocinje sa test ce da se pozove!!!!!!!!
+	-kasnije ce se prikazati mogucnost da se test metode grupisu u suit-ove!
+		public void testSimple() {
+			- jedna od funkcija za proveru!!!!!!!!
+			-pita da li je prvi argument (u ovom slucaju 9) zaista rezulta metode sa odgovarajucim parametrima (drugi argument)
+			assertEquals(9, Largest.largest(new int[] {7,8,9}));
+		}
+	}
+	- postoji i:
+	assertTrue(a == 2);
+	ako a nije jednako 2 onda se iskace jer uslovn ije ispunjen
+	> probacu sa ovim drugim nacinom:
+	TestJunit.java
+			import org.junit.Test;
+			import static org.junit.Assert.assertEquals;
+			public class TestJunit {
+				@Test
+				public void testAdd() {
+					String str= "Junit is working fine";
+					assertEquals("Junit is working fine",str);
+				}
+			}
+	TestRunner.java
+			import org.junit.runner.JUnitCore;
+			import org.junit.runner.Result;
+			import org.junit.runner.notification.Failure;
+			public class TestRunner {
+				public static void main(String[] args) {
+					Result result = JUnitCore.runClasses(TestJunit.class);
+					for (Failure failure : result.getFailures()) {
+						System.out.println(failure.toString());
+					}
+				System.out.println(result.wasSuccessful());
+				}
+			}
+	> i definitivno dva template-a za junit koji sigurno rade:
+	TestJunit.java
+	import org.junit.Test;
+	import POS_tools.*;
+
+	import static org.junit.Assert.assertEquals;
+	public class TestJunit {
+			@Test
+			public void testApp() {
+				App s1 = new App("7", "8");
+				App s2 = new App("7", "8");
+				App s3 = new App("7", "16");
+				App s4 = new App("7", "8");
+
+			assertEquals((long)15, (long)s1.addTwoNumbers("7", "8"));
+			assertEquals((long)21, (long)s2.addTwoNumbers("7", "8"));
+			assertEquals((long)23, (long)s3.addTwoNumbers("7", "16"));
+			assertEquals((long)15, (long)s4.addTwoNumbers("7", "8"));
+					//String str= "Junit is working fine";
+					//assertEquals("Junit is working fine",str);
+			}
+	}
+	TestRunner.java
+	import org.junit.runner.JUnitCore;
+	import org.junit.runner.Result;
+	import org.junit.runner.notification.Failure;
+	public class TestRunner {
+		public static void main(String[] args) {
+		Result result = JUnitCore.runClasses(TestJunit.class);
+		for (Failure failure : result.getFailures()) {
+			System.out.println(failure.toString());
+		}
+		System.out.println(result.wasSuccessful());
+		}
+	}
+
+	> primer same metode kojom se testira:
+	public void testSimple2() {
+			int[] arr = new int[3];
+			arr[0] = 7;
+			arr[1] = 8;
+			arr[2] = 9;
+			assertEquals(9, Largest.largest(arr));
+	}
+	> e sada dolazi do problema jer postoje neki razliciti paketi:
+		JUnit 3.X: junit.framework.Assert
+		JUnit 4.X: org.junit.Assert
+		Prefer the newest one, especially when running JDK5 and higher with annotation support.
 	> skinuo sam i Pragmatic Unit Testing in Java with JUnit - Andrew Hunt & David Thomas - The Pragmatic Programmer.pdf
 	> Saveti za pisanje junit testova:
 	Let’s take a look at six speci?c areas to test that will strengthen your testing skills, using your RIGHT -BICEP:
@@ -204,3 +297,134 @@ public class AddNum {
             > stigao do 283. strane
 - applying-uml-and-patterns-3rd.pdf
 	> 
+- maven
+	> sve ovo izvuceno je skunuto sa tutorial-a - http://www.tutorialspoint.com/maven/
+	> To summarize, Maven simplifies and standardizes the project build process.
+	> Maven primary goal is to provide developer
+		A comprehensive model for projects which is reusable, maintainable, and easier to comprehend.
+		plugins or tools that interact with this declarative model.
+	> Maven uses Convention over Configuration which means developers are not required to create build process themselves.
+	> As an example, following table shows the default values for project source code files, resource files and other configurations. Assuming, ${basedir} denotes the project location:
+		Item								Default
+		source code					${basedir}/src/main/java
+		resources						${basedir}/src/main/resources
+		Tests								${basedir}/src/test
+		distributable JAR			${basedir}/target
+		Complied byte code		${basedir}/target/classes
+	> POM stands for Project Object Model. It is fundamental Unit of Work in Maven. It is an XML file. It always resides in the base directory of the project as pom.xml.
+	> POM also contains the goals and plugins. While executing a task or goal, Maven looks for the POM in the current directory. It reads the POM, gets the needed configuration information, then executes the goal.
+	> Before creating a POM, we should first decide the project group (groupId), its name(artifactId) and its version as these attributes help in uniquely identifying the project in repository.
+		<project xmlns="http://maven.apache.org/POM/4.0.0"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		   http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		   <modelVersion>4.0.0</modelVersion>
+
+		   <groupId>com.companyname.project-group</groupId>
+		   <artifactId>project</artifactId>
+		   <version>1.0</version>
+		 
+		</project>
+	> It should be noted that there should be a single POM file for each project.
+		All POM files require the project element and three mandatory fields: groupId, artifactId,version.
+		Projects notation in repository is groupId:artifactId:version.
+	> All POMs inherit from a parent (despite explicitly defined or not). This base POM is known as the Super POM, and contains values inherited by default.
+	> An easy way to look at the default configurations of the super POM is by running the following command: mvn help:effective-pom - znaci ako u jednom folderu nema kreiran pom prikazace se sueprpom ali ako imam onda ce se prikazati u kombinaciji sa njim tj efektivni.
+	> When Maven starts building a project, it steps through a defined sequence of phases and executes goals which are registered with each phase. Maven has following three standard lifecycles:
+		clean
+		default(or build)
+		site
+	> A goal represents a specific task which contributes to the building and managing of a project.
+	> The order of execution depends on the order in which the goal(s) and the build phase(s) are invoked. For example, consider the command below. The clean and package arguments are build phases while the dependency:copy-dependencies is a goal.
+		mvn clean dependency:copy-dependencies package
+		Here the clean phase will be executed first, and then the dependency:copy-dependencies goal will be executed, and finally package phase will be executed.
+	> Nominalni lifecycle of maven build ima 23 faze!!
+	> There are few important concepts related to Maven Lifecycles which are wroth to mention:
+		When a phase is called via Maven command, for example mvn compile, only phases upto and including that phase will execute.
+		Different maven goals will be bound to different phases of Maven lifecycle depending upon the type of packaging (JAR / WAR / EAR).
+	> Maven Site plugin is generally used to create fresh documentation to create reports, deploy site etc.
+	> A Build profile is a set of configuration values which can be used to set or override default values of Maven build. Using a build profile, you can customize build for different environments such as Production v/s Development environments. Profiles are specified in pom.xml file using its activeProfiles / profiles elements and are triggered in variety of ways. Profiles modify the POM at build time, and are used to give parameters different target environments (for example, the path of the database server in the development, testing, and production environments).
+	> In Maven terminology, a repository is a place i.e. directory where all the project jars, library jar, plugins or any other project specific artifacts are stored and can be used by Maven easily.
+		Maven repository are of three types
+		local
+		central
+		remote
+	> Maven local repository is a folder location on your machine. It gets created when you run any maven command for the first time.
+	> Maven central repository is repository provided by Maven community. It contains a large number of commonly used libraries.
+	> Key concepts of Central repository
+		This repository is managed by Maven community.
+		It is not required to be configured.
+		It requires internet access to be searched. - ako nemam internet konekcij u nemam niti jednu verziju odredjenih plaginova maven nece raditi!!!!!!!!!!!!!!!!!!!!!!!!!!
+	> e sada ako maven nemoze da nadje ono sto je potrebno na local i central moguce mu je poturiti i treci - remoty repository gde se nalaze potrebni jar fajlovi ili plug-inovi!
+	> Redosled kojim maven trazi dependencies:
+	When we execute Maven build commands, Maven starts looking for dependency libraries in the following sequence:
+		Step 1 - Search dependency in local repository, if not found, move to step 2 else if found then do the further processing.
+		Step 2 - Search dependency in central repository, if not found and remote repository/repositories is/are mentioned then move to step 4 else if found, then it is downloaded to local repository for future reference.
+		Step 3 - If a remote repository has not been mentioned, Maven simply stops the processing and throws error (Unable to find dependency).
+		Step 4 - Search dependency in remote repository or repositories, if found then it is downloaded to local repository for future reference otherwise Maven as expected stop processing and throws error (Unable to find dependency).
+	> Maven is actually a plugin execution framework where every task is actually done by plugins!!!!!!!!!!!!!!!!cini mi se da je ovo najbolje objasnjenje!!!!!!!!!!!!Maven Plugins are generally used to :
+		create jar file
+		create war file
+		compile code files
+		unit testing of code
+		create project documentation
+		create project reports
+	> Najbitnije:
+	A plugin generally provides a set of goals and which can be executed using following syntax:
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		mvn [plugin-name]:[goal-name]
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+		For example, a Java project can be compiled with the maven-compiler-plugin's compile-goal by running following command
+		mvn compiler:compile
+	> Following is the list of few common plugins:
+		Plugin						Description
+		clean							Clean up target after the build. Deletes the target directory.
+		compiler					Compiles Java source files.
+		surefire						Run the JUnit unit tests. Creates test reports.
+		jar							Builds a JAR file from the current project.
+		war							Builds a WAR file from the current project.
+		javadoc						Generates Javadoc for the project.
+		antrun						Runs a set of ant tasks from any phase mentioned of the build.
+	> I konacno kako ubacujem plugin i kako ga koristim:
+	The above example illustrates the following key concepts:
+		Plugins are specified in pom.xml using plugins element.
+		Each plugin can have multiple goals.
+		You can define phase from where plugin should starts its processing using its phase element. We've used clean phase.
+		You can configure tasks to be executed by binding them to goals of plugin. We've bound echo task with run goal of maven-antrun-plugin.
+		That's it, Maven will handle the rest. It will download the plugin if not available in local repository and starts its processing
+	> DEFINITIVNO START:
+	Maven uses archetype plugins to create projects. To create a simple java application, we'll use maven-archetype-quickstart plugin. In example below, We'll create a maven based java application project in C:\MVN folder.
+		Let's open command console, go the C:\MVN directory and execute the following mvn command.
+		###############################
+		START!!!!!!!!!!!!GENERISANJE NOVOG JAVA-INOG PROJEKTA!!!!!!!!!
+		PRVI KORAK!!!!!!!!!!!!!!!SAMO UCI U FOLDER GDE CE DA SE NALAZI PROJEKAT ILI JOS BOJLE JEDNOSTANO UCI U FOLDER GDE SE NALAZE PROJEKTI I ONDA POZVATI OVU KOMANDU KOJA CE NAPRAVITI FOLDER PO groupId PARAMETRU!!!!!!!!!!!!!!!!NAPOMENA:ne sme postojati pom.xml u postojecem folder-u!!!!!!!!!!!!!!!!
+		C:\MVN>mvn archetype:generate -DgroupId=POS_tools -DartifactId=dump_parser -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+		#################################
+		-DgroupId=com.companyname.bank 
+		-DartifactId=consumerBanking 
+		-DarchetypeArtifactId=maven-archetype-quickstart 
+		-DinteractiveMode=false
+		Maven will start processing and will create the complete java application project structure.	
+		????????problem je sto mi je ovde tracio da popunim neki broj za neki filter tj da izaberem jeda od mogucih arhitipova!!!!
+		????bio je i ovde problem!!!!!!!!zato sto je u folder-u gde sam pokretao ovu komandu vec postojao pom.xml!!!!!!!!!!!!!!kada sam ga izbrisao izgenerisan mi je projekat!!!!!!!!
+		C:\MVN>mvn archetype:generate -DgroupId=POS_tools -DartifactId=dump_parser -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+		????ovaj donji ne radi!!!!!!
+		mvn archetype:generate -DarchetypeGroupId=POS_tools -DarchetypeArtifactId=dump_parser -DarchetypeVersion=1.0
+	> e sada kao sto sam vec ranije naveo kada pokrenem neku fazu maven-a odrade se sve faze do te faze!tako da bi ova komanda treba da build-uje projekat!!!!!!!!!!!!u folder-u u kome se nalazi pom.xml
+	mvn clean package
+	> sa svim predhodno postavljenim parametrima:
+	You've built your project and created final jar file, following are the key learning concepts
+		We give maven two goals, first to clean the target directory (clean) and then package the project build output as jar(package).
+		Packaged jar is available in consumerBanking\target folder as consumerBanking-1.0-SNAPSHOT.jar.
+		Test reports are available in consumerBanking\target\surefire-reports folder.
+		Maven compiled source code file(s) and then test source code file(s).
+		Then Maven run the test cases.
+		Finally Maven created the package.
+		Now open command console, go the C:\MVN\consumerBanking\target\classes directory and execute the following java command.
+		C:\MVN\consumerBanking\target\classes>java com.companyname.bank.App
+		You will see the result
+		Hello World!
+	>UKRATKO KADA HOCU DA POKRENEM ODE SE U target folder i pozove se class-a sa java puna_putanja_do_classe_gde_se_nalazi_main. konkretno u testnom primeru sam ovako pokrenuo aplikaciju!!!!!!
+	java POS_tools/App
+	> kasnije kada dodam noce class-e onda ide izgleda pozivanje programa (class-e) ide malo drugacije
+	java -cp POS_tools/App (??ali ovo nisam jos probao!!!!!!)
