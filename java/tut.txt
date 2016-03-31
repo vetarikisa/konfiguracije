@@ -428,3 +428,4 @@ public class AddNum {
 	java POS_tools/App
 	> kasnije kada dodam noce class-e onda ide izgleda pozivanje programa (class-e) ide malo drugacije
 	java -cp POS_tools/App (??ali ovo nisam jos probao!!!!!!)
+
