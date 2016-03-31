@@ -1,10 +1,16 @@
+- unos user i password podataka tako da ne moram da ih unosi svaki put kada hocu da komuniciram sa remote repository-jem:
+         > sada cu da probam i definitivno - NAPOMENA: definitivno pravo resenje!!!!!!!!!!mada ne znam gde se nalaze sada credentials!!!
+        $ git config credential.helper store
+        $ git push http://example.com/repo.git
+        Username: <type your username>
+        Password: <type your password>
 - ode se u folder projekta koji se zeli pratiti pomocu Git-a
 - odradi se git init
 - zatim se sa git add dodaju fajlovi koji zele da se prate
 - i definitivno se sa git commit -m "komentar" postavi inicijalna verzija projekta tj inicijalni HEAD
 - ako se pak zeli pokrenuti novi projekat koji ce se pratiti sa Git-m a taj projekat je na nekom Git serveru potrebno je pozvati komandu git clone putanja_do_repository_koji_zelimo_da_kloniramo
 - treba uociti da se ovde poziva clone a ne checkout tj Git kopira celo 'stablo' projekta a ne samo sliku HEAD-add
-- ìGetting Git on a Serverî - ovde se daju opcije za pristupanje serverima kao i prednosti i mane svakog nacina
+- ‚ÄúGetting Git on a Server‚Äù - ovde se daju opcije za pristupanje serverima kao i prednosti i mane svakog nacina
 - git status je komanda da vidim koji fajl je u kom stanju
 - podesio sam vizuelni prikaz https://danlimerick.wordpress.com/2011/06/19/git-for-window-tip-use-p4merge-as-mergetool/
 - otprilike skinuo sam samo p4merge (ne ceo paket) i otkucao ove dve linije koda:
@@ -26,25 +32,25 @@ git log --pretty=format:"%h - %an, %ar : %s"
 - za log postoji i opcija koliko zadnjih komitovanja zelim da vidim ali je ipak mnogo korisnija i popilarnija opcija - the time-limiting options such as --since and --until are very useful.
 - if you wanted to find the last commit that added or removed a reference to a specific function, you could call:!!!!!!!!!!!!!!!savrseno!!!!!!!!!!!!!!
 $ git log -Sfunction_name
-- Itís important to understand that git checkout -- [file] is a dangerous
-command. Any changes you made to that file are gone ñ you just copied
-another file over it. Donít ever use this command unless you absolutely
-know that you donít want the file.
+- It‚Äôs important to understand that git checkout -- [file] is a dangerous
+command. Any changes you made to that file are gone ‚Äì you just copied
+another file over it. Don‚Äôt ever use this command unless you absolutely
+know that you don‚Äôt want the file.
 - Remember, anything that is committed in Git can almost always be recovered!!!!!!!!!!!!!!!
 - However, anything you lose that was never committed is likely never to be seen again!!!!!!!!!!!!!!!!!!!!!
 - Remote repositories are versions of your project that are hosted on the Internet or network somewhere.
 - Postoje dve verzije tagovanja:
 $ git tag -a v1.4 -m 'my version 1.4'
 $ git tag
-- A lightweight tag is very much like a branch that doesnít change ñ itís just a pointer to a specific commit.
-- Annotated tags, however, are stored as full objects in the Git database. Theyíre checksummed; contain the tagger name, e-mail, and date; have a tagging message; and can be signed and verified 
+- A lightweight tag is very much like a branch that doesn‚Äôt change ‚Äì it‚Äôs just a pointer to a specific commit.
+- Annotated tags, however, are stored as full objects in the Git database. They‚Äôre checksummed; contain the tagger name, e-mail, and date; have a tagging message; and can be signed and verified 
 with GNU Privacy Guard (GPG).
-- To create a lightweight tag, donít supply the -a, -s, or -m option.
+- To create a lightweight tag, don‚Äôt supply the -a, -s, or -m option.
 - To tag that commit, you specify the commit checksum (or part of it) at the end of the command:
 $ git tag -a v1.2 9fceb02
-- By default, the git push command doesnít transfer tags to remote servers.
+- By default, the git push command doesn‚Äôt transfer tags to remote servers.
 You will have to explicitly push tags to a shared server after you have created
-them. This process is just like sharing remote branches ñ you can run git push
+them. This process is just like sharing remote branches ‚Äì you can run git push
 origin [tagname].If you have a lot of tags that you want to push up at once, you can also use
 the --tags option to the git push command.
 - moguce je postaviti alijase i to na sledeci nacin:
