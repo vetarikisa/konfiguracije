@@ -15,9 +15,19 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/vimfiles/bundle/Vundle.vim/
-let path='~/vimfiles/bundle'
+" u slucaju ako je window onda nasetuj ove parametre
+if has("win32") || has("win16")
+	" set the runtime path to include Vundle and initialize
+	" C:\Vim\vimfiles\bundle\Vundle.vim\"
+	"set rtp+=~/vimfiles/bundle/Vundle.vim/
+	set rtp+=C:/Vim/vimfiles/bundle/Vundle.vim/
+	"let path='~/vimfiles/bundle'
+	let path='C:/Vim/vimfiles/bundle'
+" ako nije nasetuj ove  (tj za Linuxx i ostale platforme)
+else
+	set rtp+=~/vimfiles/bundle/Vundle.vim/
+	let path='~/vimfiles/bundle'
+endif
 call vundle#begin(path)
 
 " alternatively, pass a path where Vundle should install plugins
@@ -33,16 +43,16 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'EasyMotion'
 
 "Color scheme
-Plugin 'candy.vim'
+"Plugin 'candy.vim'
 
 "Color scheme
-Plugin 'candycode.vim'
+"Plugin 'candycode.vim'
 
 "Color scheme
-Plugin 'darkerdesert'
+"Plugin 'darkerdesert'
 
 "Color scheme
-Plugin 'Solarized'
+"Plugin 'Solarized'
 
 "File system tree
 Plugin 'The-NERD-tree'
@@ -60,7 +70,7 @@ Plugin 'snipMate'
 "Plugin 'javacomplete'
 
 "dovrsava granicnike
-"Plugin 'delimitMate'
+Bundle 'Raimondi/delimitMate'
 
 "dovrsava granicnike
 Plugin 'AutoClose'
@@ -72,7 +82,7 @@ Plugin 'AutoClose'
 "Plugin 'cscope-menu'
 
 "ovo je plugin koji ce da koristi cscope...valjda
-"Plugin 'CCTree'
+Plugin 'CCTree'
 
 "pokusaj da prikaze msve markera"
 Plugin 'kshenoy/vim-signature'
@@ -108,6 +118,14 @@ filetype plugin indent on
 "source $VIMRUNTIME/mswin.vim
 "behave mswin
 filetype plugin on
+
+"iskljucivanje back up fajlova
+"no backup files
+set nobackup       
+"only in case you don't want a backup file while editing
+set nowritebackup  
+"no swap files
+set noswapfile     
 
 "poziv novog vimrc fajla!!!verovatno ce morati drugaciji poziv na linux-u???
 "mozda preko $MYVIMRC
@@ -162,11 +180,20 @@ inoremap <Del> <Nop>
 
 "font i velicina font-a.PAZI!!!!!!!!!!!nisam siguran da li ovaj font postoji na Linux-u tj da li ce ova komanda praviti problem kada se vim pokrene na Linux-u
 set guifont=Consolas:h16
-
+"ovo se unosi kako mi se ne bi brisao history kada se krecem medju baferima a
+"mislim i da necu morati da svaki cas snimam fajl kad zelim da predjem na
+"drugi
+set hidden
 " prica oko tabova... jos mi nije jasna...
+"set tabstop=4
+"set softtabstop=4
+"set expandtab
+
+"na ovaj nacin se koriste tabovi za uvlacenje i to tabovi sirine 4.iz nekog
+"razloga ja od starta nisam tako koristio ali ovako cu koristi naposlu jer se
+"u IngeDev-u koriste takva uvlacenja!
+set shiftwidth=4
 set tabstop=4
-set softtabstop=4
-set expandtab
 
 " broj redova
 set number
@@ -203,6 +230,12 @@ imap ff jjA
 imap dd <C-w>
 " da izbirsem poslednji red ne izlazeci iz insert moda - stavicu vv posto mi je s blizu d pa cu cesto brisati ceo red umesto reci i obratno
 imap vv <C-u>
+
+" naravno zbog ovoh donjih mapiranja z registar ce biti zauzet
+" kopiranje reci ispod kursora
+nmap ee viw"zy
+" paste reci ispod kursora
+nmap rr viw"zp
 
 "kada otkucam {} pozicionira me u novom redu sa uvucenim tabom izmedju {}
 imap {} {}jji<CR>jjko 
@@ -277,7 +310,7 @@ set autoread
 
 "ovo donje setovanje ne znaci puno za gvim ali deluje al iza obican vim znaci!!!!!!!!!!!!!"
 set background=dark
-colorscheme candycode
+colorscheme desert
 
 "ovo je dodatak za smestanje swap fajlova
 set directory=.,$TEMP
