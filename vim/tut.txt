@@ -37,6 +37,7 @@
 - saveti iz preactical Vim:
 	> The makeprg setting allows us to specify the program that will be called when we run :make (see :h 'makeprg' ). - quickfix, maven, next, previous
 - instaliranje plugin-a preko vundle-a:
+		> setovanje Vundle-a na Windows-u: https://github.com/vetarikisa/konfiguracije
         > add it to you .vimrc between call vundle#begin() and call vundle#end()
         > save the .vimrc
         > type <ESC>:PluginInstall<CR> to update the plugins
