@@ -112,7 +112,7 @@ snippet <
 	<${1}>${2}
 #snippet-i za unos doc komentara
 # snippet za class-u
-snippet docc
+snippet cla
 	/**
 	* <h1>${1:naslov}</h1>
 	* ${2:opis}
@@ -123,7 +123,7 @@ snippet docc
 	* @since   ${4:ako postoji}
 	*/
 # snippet za method-u
-snippet docm
+snippet met
 	/**
 	* ${1:opis}
 	* @param ${2:ime parametra - iz metode} ${3:opis parametra}
@@ -132,7 +132,7 @@ snippet docm
 	* @see ${7:napr neke od class-a koja se gore koristi, recimo class-a greske koja se vraca}
 	*/
 # variable (field)
-snippet docv
+snippet var
 	/**
 	 * ${1:opis promenljive/polja}
 	 */
@@ -141,15 +141,17 @@ snippet tag
 	<${1:tag}>{2:value}</${1}>
 	# pomoc prilikom kreiranja tagova - greska ovo je xml snippet
 # snippet-i koji mi ubacuju package u kome se nalazi odredjena class-a.Napr kada prvi put unesem class-u ArrayList potrebno je da napisem ArrayList,pritisnem TAB i onda ce mi se pored unosa te promenljive prikazati i paket u kome se nalazi ArrayList class-a.
-snippet ArrayList
+snippet ali
 	ArrayList {1:reference} = new ArrayList();
 	import java.util.ArrayList;
 # a pored snippeta ovog tipa uvescu i najcesce koriscene class-e napr
-snippet al
-	ArrayList {1:reference} = new ArrayList();
-snippet st
+#snippet al
+#ArrayList {1:reference} = new ArrayList();
+snippet int
+	Integer {1:reference} = new Integer();
+snippet str
 	String {1:reference} = new String();
-snippet br
+snippet brr
 	BufferedReader {1:reference} = new BufferedReader();
 snippet fw
 	FileWriter {1:reference} = new FileWrter();
