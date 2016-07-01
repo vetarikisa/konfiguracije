@@ -42,17 +42,8 @@ Plugin 'tpope/vim-fugitive'
 "EasyMotion
 Plugin 'EasyMotion'
 
-"Color scheme
-"Plugin 'candy.vim'
-
-"Color scheme
-"Plugin 'candycode.vim'
-
-"Color scheme
-"Plugin 'darkerdesert'
-
-"Color scheme
-"Plugin 'Solarized'
+" plugin for autocomplite
+Plugin 'ctrlp.vim'
 
 "File system tree
 Plugin 'The-NERD-tree'
@@ -78,6 +69,9 @@ Plugin 'AutoClose'
 "youcompleteme
 "Plugin 'ucompleteme'
 
+"plugin za selekciju"
+""Plugin 'terryma/vim-expand-region'
+
 "proba cscope-a - nesto ovo ne sljaka tj izgleda da mora rucno da se instalira pa da se napravi fajl pa tek onda da mu se pristupa. a i ovo je nominalno pravljeno za Linux
 "Plugin 'cscope-menu'
 
@@ -86,6 +80,9 @@ Plugin 'CCTree'
 
 "pokusaj da prikaze msve markera"
 Plugin 'kshenoy/vim-signature'
+
+"dodata za komunikaciju za Git-om"
+Plugin 'fugitive.vim'
 
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -104,6 +101,10 @@ Plugin 'kshenoy/vim-signature'
 " All of your Plugins must be added before the following line
 " required
 call vundle#end()
+
+"poenta leader-a je da niz komandi nesto znaci a ne kombinacija tj ne moraju
+"tasteri istovremeno da se pritisnu!!!!!!!!!!!!!!!"
+let mapleader = "\<Space>"
 
  " required
 filetype plugin indent on
@@ -127,9 +128,6 @@ set nowritebackup
 "no swap files
 set noswapfile     
 
-"poziv novog vimrc fajla!!!verovatno ce morati drugaciji poziv na linux-u???
-"mozda preko $MYVIMRC
-map <Del> :source c:\Users\vlastimir\vim\_vimrc<ENTER>:nohlsearch<ENTER>
 
 "otvaranje quickfix prozora
 map <F1> :copen 5<CR>
@@ -321,3 +319,143 @@ nnoremap <C-c> :bp\|bd #<CR>
 
 "ocekujem da mi ne radi resize...
 set noea
+
+"neka dodatna stelovanja koja zavise od OS"
+"setovanje da mi leader bude space
+
+" u slucaju ako je window onda nasetuj ove parametre
+if has("win32") || has("win16")
+"poziv novog vimrc fajla!!!verovatno ce morati drugaciji poziv na linux-u???
+"mozda preko $MYVIMRC
+map <Del> :source c:\vim\_vimrc<ENTER>:nohlsearch<ENTER>
+" otvori vimrc fajl. mozda je teze zapamtiti ali sam postavio na q jer mi je
+" dalje za dohvatanje a ostavio bih home raw za nesto prece
+nnoremap <Leader>q :e c:\vim\_vimrc<ENTER>
+" java snippet-i. takodje prica kao i gore"
+nnoremap <Leader>w :e C:\Vim\vimfiles\bundle\snipMate\snippets\java.snippets<ENTER>
+" c snippet-i. takodje prica kao i gore"
+nnoremap <Leader>e :e C:\Vim\vimfiles\bundle\snipMate\snippets\c.snippets<ENTER>
+
+" ako nije nasetuj ove  (tj za Linuxx i ostale platforme)
+else
+endif
+" testiranje novim mogucnosti"
+""vmap v <Plug>(expand_region_expand)
+""vmap <C-v> <Plug>(expand_region_shrink)
+"ovo bi trebalo da je vrhunska fora - kada nesto selektujem pa onda kopiram
+"negde ostaje mi u clipboard-u ono sto sam prvo kopirao"
+" vp doesn't replace paste buffer
+" radi!!!!!!!!!!!!!savrseno!!!!!!!!!!!!"
+function! RestoreRegister()
+  let @" = s:restore_reg
+  return ''
+endfunction
+function! s:Repl()
+  let s:restore_reg = @"
+  return "p@=RestoreRegister()\<cr>"
+endfunction
+vmap <silent> <expr> p <sid>Repl()
+" ovde bi trebalo da je search and replace"
+"takodje radi!!!!!!!!!!stravica!!!!!!!!!!!!"
+vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
+    \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
+omap s :normal vs<CR>
+
+" selektujem tekst koji sam upravo paste-ovao"
+" dobra fora!!!!!!!gv takodje selektuje poslednje selektovan tekst - radi sa
+" malim v"
+noremap gV `[v`]
+
+" copy and paste in system clipboard
+"takodje radi vrhunski"
+vmap <Leader>y "+y
+vmap <Leader>d "+d
+nmap <Leader>p "+p
+nmap <Leader>P "+P
+vmap <Leader>p "+p
+vmap <Leader>P "+P
+
+"snimanje fajla 
+nnoremap <Leader>s :w<CR>
+
+" Build the closest project to the current file with ant or maven
+map <leader>b :call Build(0)<ENTER>
+"map <leader>clb :call Build(1)<ENTER>:call Build(0)<ENTER>
+" ovako pocinje funkcija
+function! Build(clean)
+	" u l.dir se smesta apsolutna do ovog fajla gde je pozvana ova funkcija"
+	" % je trenutni fajl
+	" :p apsolutna putanja
+	" :h dodaje i ime fajla na kra
+	" :t skida samo posledjni nivo tj ime fajl
+	" :e skida ekstenziju poslendje fajla
+	let l:dir = expand('%:p:h')
+	" u windows-u je granicnik izmedju fajlova \ a posto je to u vimscript-u
+	" escp seq mora da se escape-uje. na linux-u je potrebno postaviti samo
+	" jedan granicnik /
+	" . konkatenacija
+	let l:pom = l:dir . "\\pom.xml"
+	" da li postoji ovaj fajl filereadable
+	while ! filereadable(l:pom)
+		let l:dir = fnamemodify(l:dir, ':h')
+		if 1 == strlen(l:dir)
+			" ovako se prikazuje poruka na komandnoj liniji"
+			echo "Could not find pom.xml, build.xml, build.gradle, or settings.gradle"
+			return
+		endif
+		let l:pom = l:dir . "\\pom.xml"
+		""echo l:pom
+	endwhile
+
+	echo "Pozicija pom.xml fajla je " . l:pom
+	let l:rez = l:dir . "\\build_res.txt"
+	echo "Ovde smestam rezultat " . l:rez
+	"ovaj if mi za sada ne treba ali cu ga ostviti da bih znao za kasnije kako
+	"treba da se radi.trenutno je dobro zato sto mi se svi rezultati kaleme
+	"jedan na drugi ali cu kasnije mozda hteti da stavim neki filtar i da mi
+	"se prikazuju samo odredjeni rez pa su mozda morati da napustim read..ali
+	"za sada je ok!!!!!!!!!!!sta vise.savrseno je!!!!!!!!!
+	" ovaj link pogledati da vidim zasto mi ne stima klasican poziv externog
+	" programa - http://vim.wikia.com/wiki/Execute_external_programs_asynchronously_under_Windows
+	if filereadable(l:pom)
+		"nakon make se poziva ovaj string pa argumenti koje sam naveo iza
+		"samog poziva u exe funkciji pa shellpipe i errfile"
+		""set makeprg=mvn\ -q\ -e\ compile
+		"ako zelim sistemskoj promenljivoj da dodelim string vrednost koristicu
+		"let i &.izgleda da set smatra" kao nesto specijalno.cini mi se da se
+		"smatra pocetkom komentara
+		""set makeprg=mvn\ compile
+		""let &makeef=l:rez
+		" ovo dole su opcije koje se koriste za pipe-ing.kao s se uzima makeef.
+		""shellpipe=>%s 2>&1 
+		echo &makeef
+		set efm=
+					\%W[WARNING]\ %f:[%l\\,%c]\ %m,
+					\%E[ERROR]\ %f:[%l\\,%c]\ %m,
+					\%C\ %#symbol:\ %.%#\ %m,
+					\%Z\ %#location:\ %.%#,
+					\%C[ERROR]\ symbol:\ %.%#\ %m,
+					\%Z[ERROR]\ location:\ %.%#,
+					\%C[ERROR]\ %#required:\ %#%m,
+					\%Z[ERROR]\ found:\ %#%m,
+					\%Z\ %#found:\ %#%m,
+					\%-Z%.%#,
+					\[ERROR]\ %f:[%l]\ %m,
+					\%-G%.%#,
+			let l:args = "-f " . l:pom 
+	endif
+
+	""let l:bilduj = l:args
+	""exe l:bilduj
+	"exe komanda izvrsava sve sto hocu na komandnoj liniji.znaci kao da sam
+	"pritisuno :komanda<enter>. sa exe samo unesem exe komanda"
+	"pozicioniram se u fodler gde treba da pokrenem pom.xml"
+	exe "cd " . l:dir
+	echo "Ovde izvrsavam mvn komandu"
+	exe "pwd"
+	exe "e " . l:rez
+	" read cita rezulta komande i smesta ispod kursora!!!!!!!!!!!!!
+	exe "read !mvn compile " . l:args
+	"cini mi se da moze i execute umesto exe
+	"ova ko se zavrsava funkcija
+endfunction
