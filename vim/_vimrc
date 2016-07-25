@@ -63,20 +63,19 @@ Plugin 'snipMate'
 "dovrsava granicnike
 Bundle 'Raimondi/delimitMate'
 
-"dovrsava granicnike
-Plugin 'AutoClose'
+"dovrsava granicnike - pravio je problem da ne mogu da unosim text u CTRL+f
+"modu
+""Plugin 'AutoClose'
 
 "youcompleteme
 "Plugin 'ucompleteme'
-
-"plugin za selekciju"
-""Plugin 'terryma/vim-expand-region'
 
 "proba cscope-a - nesto ovo ne sljaka tj izgleda da mora rucno da se instalira pa da se napravi fajl pa tek onda da mu se pristupa. a i ovo je nominalno pravljeno za Linux
 "Plugin 'cscope-menu'
 
 "ovo je plugin koji ce da koristi cscope...valjda
-Plugin 'CCTree'
+"tek kada testiram i probam ovaj plugin onda cu ga komitovati
+""Plugin 'hari-rangarajan/CCTree'
 
 "pokusaj da prikaze msve markera"
 Plugin 'kshenoy/vim-signature'
@@ -229,20 +228,24 @@ imap dd <C-w>
 " da izbirsem poslednji red ne izlazeci iz insert moda - stavicu vv posto mi je s blizu d pa cu cesto brisati ceo red umesto reci i obratno
 imap vv <C-u>
 
-" naravno zbog ovoh donjih mapiranja z registar ce biti zauzet
+" naravno ulazi ulazi donjih mapiranja z registar ce biti zauzet
 " kopiranje reci ispod kursora
-nmap ee viw"zy
+"iako sam uveo da se ne pretabava register ipak ni ovo nije losa opcija
+nmap <Leader>r viw"xy
 " paste reci ispod kursora
-nmap rr viw"zp
+nmap <Leader>f viw"xp
 
 "kada otkucam {} pozicionira me u novom redu sa uvucenim tabom izmedju {}
 imap {} {}jji<CR>jjko 
 
 "pozivanje easymotion plugin-a!!!!!
 "trazenje reci unapred
-nmap ss \\w
+"/\<Space>
+""nmap ss \\w
+nmap ss <Space><Space>w
 "trazenje reci unazad
-nmap aa \\b
+"nmap aa \\b
+nmap aa <Space><Space>b
 
 "This will check the current folder for tags file and keep going one directory up all the way to the root folder. SO you can be in any sub-folder in your project and it'll be able to find the tags files:
 set tags=./tags;/
